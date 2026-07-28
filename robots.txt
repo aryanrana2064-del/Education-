@@ -1,0 +1,305 @@
+# ============================================
+# SECURE WEBSITE — Robots.txt Configuration
+# Security System v2.0
+# Last Updated: 2026-01-28
+# ============================================
+
+# --------------------------------------------------
+# 1. ALLOW MAJOR SEARCH ENGINES
+# --------------------------------------------------
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /login
+Disallow: /security
+Disallow: /api
+Disallow: /config
+Disallow: /middleware
+Disallow: /security/
+Disallow: /assets/private/
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.env$
+Disallow: /*.log$
+Crawl-delay: 1
+
+# --------------------------------------------------
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /login
+Disallow: /security
+Disallow: /api
+Crawl-delay: 2
+
+# --------------------------------------------------
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /login
+Crawl-delay: 1
+
+# --------------------------------------------------
+User-agent: YandexBot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /login
+Crawl-delay: 2
+
+# --------------------------------------------------
+User-agent: Baiduspider
+Disallow: /
+Crawl-delay: 5
+
+# --------------------------------------------------
+User-agent: Slurp
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Crawl-delay: 2
+
+# --------------------------------------------------
+User-agent: Applebot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+
+# --------------------------------------------------
+User-agent: facebot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+
+# --------------------------------------------------
+User-agent: Twitterbot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+
+# --------------------------------------------------
+User-agent: LinkedInBot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+
+# --------------------------------------------------
+# 2. BLOCK MALICIOUS BOTS & SCRAPERS
+# --------------------------------------------------
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: rogerbot
+Disallow: /
+
+User-agent: Exabot
+Disallow: /
+
+User-agent: ia_archiver
+Disallow: /
+
+User-agent: Gigabot
+Disallow: /
+
+User-agent: ScoutJet
+Disallow: /
+
+User-agent: spbot
+Disallow: /
+
+User-agent: UCWeb
+Disallow: /
+
+User-agent: UCBrowser
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: Sogou
+Disallow: /
+
+User-agent: YisouSpider
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Nutch
+Disallow: /
+
+User-agent: Screaming Frog
+Disallow: /
+
+User-agent: Xenu Link Sleuth
+Disallow: /
+
+User-agent: HTTrack
+Disallow: /
+
+User-agent: wget
+Disallow: /
+
+User-agent: curl
+Disallow: /
+
+User-agent: python-requests
+Disallow: /
+
+User-agent: python-urllib
+Disallow: /
+
+User-agent: Java
+Disallow: /
+
+User-agent: PHP
+Disallow: /
+
+User-agent: Perl
+Disallow: /
+
+User-agent: Go-http-client
+Disallow: /
+
+User-agent: Node-fetch
+Disallow: /
+
+User-agent: axios
+Disallow: /
+
+User-agent: okhttp
+Disallow: /
+
+User-agent: HttpClient
+Disallow: /
+
+User-agent: libwww
+Disallow: /
+
+User-agent: sqlmap
+Disallow: /
+
+User-agent: nikto
+Disallow: /
+
+User-agent: nmap
+Disallow: /
+
+User-agent: nessus
+Disallow: /
+
+User-agent: OpenVAS
+Disallow: /
+
+User-agent: ZAP
+Disallow: /
+
+User-agent: BurpSuite
+Disallow: /
+
+User-agent: Acunetix
+Disallow: /
+
+User-agent: Netsparker
+Disallow: /
+
+User-agent: Qualys
+Disallow: /
+
+# --------------------------------------------------
+# 3. DEFAULT RULES FOR ALL OTHER BOTS
+# --------------------------------------------------
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /login
+Disallow: /security
+Disallow: /api
+Disallow: /config
+Disallow: /middleware
+Disallow: /security/
+Disallow: /assets/private/
+Disallow: /docs/
+Disallow: /*.json$
+Disallow: /*.env$
+Disallow: /*.log$
+Disallow: /*.md$
+Disallow: /*.sql$
+Disallow: /*.bak$
+Disallow: /*.backup$
+Disallow: /*.tmp$
+Disallow: /*.zip$
+Disallow: /*.tar$
+Disallow: /*.gz$
+Disallow: /wp-admin
+Disallow: /wp-content
+Disallow: /wp-includes
+Disallow: /wordpress
+Disallow: /phpmyadmin
+Disallow: /cpanel
+Disallow: /webmail
+Disallow: /adminer
+Disallow: /sql
+Disallow: /db
+Disallow: /database
+Disallow: /backup
+Disallow: /old
+Disallow: /test
+Disallow: /dev
+Disallow: /staging
+Disallow: /tmp
+Disallow: /temp
+Crawl-delay: 3
+
+# --------------------------------------------------
+# 4. SITEMAP LOCATION
+# --------------------------------------------------
+Sitemap: https://secure-website.vercel.app/sitemap.xml
+
+# --------------------------------------------------
+# 5. ALLOW RULES (Override disallow for specific paths)
+# --------------------------------------------------
+Allow: /
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+Allow: /assets/logo.svg
+Allow: /assets/favicon.ico
+Allow: /assets/security-icon.svg
+Allow: /sitemap.xml
+Allow: /robots.txt
+
+# --------------------------------------------------
+# 6. REQUEST RATE LIMITING HINTS
+# --------------------------------------------------
+# Note: These are hints for well-behaved crawlers.
+# Actual rate limiting is handled by the server firewall.
+Request-rate: 1/1
+Visit-time: 0200-0500
+
+# --------------------------------------------------
+# 7. CLEANUP PARAMETERS (Prevent duplicate content)
+# --------------------------------------------------
+Clean-param: utm_source &utm_medium &utm_campaign &utm_term &utm_content
+Clean-param: fbclid &gclid &msclkid &ref &source
+Clean-param: sessionid &phpsessid &jsessionid &aspsessionid
+
+# --------------------------------------------------
+# END OF ROBOTS.TXT
+# --------------------------------------------------

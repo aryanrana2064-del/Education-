@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Website — Protected Home</title>
+    <meta name="description" content="Fully secured professional website with DDoS protection, firewall, SSL encryption, and real-time security monitoring.">
+    <meta name="keywords" content="secure website, security, firewall, ddos protection, ssl, encryption">
+    <meta name="author" content="Security System">
+    <meta property="og:title" content="Secure Website — Protected Home">
+    <meta property="og:description" content="Enterprise-grade security for your website. DDoS protection, firewall, encryption.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://secure-website.vercel.app">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="canonical" href="https://secure-website.vercel.app">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/security.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <script src="security/security-core.js" defer></script>
+    <script src="security/firewall.js" defer></script>
+    <script src="security/validator.js" defer></script>
+    <script src="security/rate-limiter.js" defer></script>
+    <script src="security/auth-guard.js" defer></script>
+    <script src="security/headers.js" defer></script>
+    <script src="security/logger.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <!-- ============================================
+    HEADER / NAVIGATION
+    ============================================ -->
+    <header class="header" id="header">
+        <div class="container header-inner">
+            <!-- Logo -->
+            <a href="/" class="logo" aria-label="SecureSite Home">
+                <img src="assets/logo.svg" alt="SecureSite Logo" width="40" height="40" loading="eager">
+                <div class="logo-text">
+                    <span class="logo-main">Secure<strong>Site</strong></span>
+                    <span class="logo-sub">Security System v2.0</span>
+                </div>
+            </a>
+            
+            <!-- Navigation -->
+            <nav class="nav" id="nav" aria-label="Main navigation">
+                <ul class="nav-list">
+                    <li><a href="/" class="nav-link active" aria-current="page">Home</a></li>
+                    <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                    <li><a href="admin.html" class="nav-link">Admin</a></li>
+                    <li><a href="login.html" class="nav-link">Login</a></li>
+                    <li><a href="security-dashboard.html" class="nav-link">Security</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <button class="btn btn-outline btn-sm" id="logoutBtn" onclick="handleLogout()" style="display:none" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+                <button class="btn btn-primary btn-sm" id="loginBtn" onclick="window.location.href='login.html'" aria-label="Login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <!-- Mobile Menu Toggle -->
+                <button class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()" aria-label="Toggle menu" aria-expanded="false">
+                    <span class="menu-bar"></span>
+                    <span class="menu-bar"></span>
+                    <span class="menu-bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+    HERO SECTION
+    ============================================ -->
+    <section class="hero" id="home">
+        <div class="container hero-grid">
+            <div class="hero-content animate fade-in-left">
+                <span class="badge badge-green pulse">
+                    <i class="fas fa-shield-alt"></i> All Systems Operational
+                </span>
+                <h1 class="hero-title">
+                    Your Website Is
+                    <span class="text-gradient">Fully Protected</span>
+                </h1>
+                <p class="hero-description">
+                    Enterprise-grade security with DDoS protection, advanced firewall, 
+                    SSL encryption, real-time monitoring, and 99.9% uptime guarantee.
+                </p>
+                <div class="hero-buttons">
+                    <a href="dashboard.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="security-dashboard.html" class="btn btn-outline btn-lg">
+                        <i class="fas fa-chart-line"></i> Security Status
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <strong class="counter" data-target="50000">50,000+</strong>
+                        <span>Attacks Blocked Daily</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>99.9%</strong>
+                        <span>Uptime SLA</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>24/7</strong>
+                        <span>Monitoring</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual animate fade-in-right">
+                <div class="security-shield">
+                    <div class="shield-icon">
+                        <i class="fas fa-shield-haltered"></i>
+                    </div>
+                    <div class="shield-pulse"></div>
+                    <div class="shield-pulse delay"></div>
+                </div>
+                <div class="floating-card card-1">
+                    <i class="fas fa-lock"></i> SSL 256-bit
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-fire"></i> Firewall Active
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-check-circle"></i> All Systems Go
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    SECURITY FEATURES SECTION
+    ============================================ -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Why Choose Us</span>
+                <h2 class="section-title">Comprehensive Security Features</h2>
+                <p class="section-description">Everything you need to protect your website from modern threats</p>
+            </div>
+            
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card animate">
+                    <div class="feature-icon green">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h3>DDoS Firewall</h3>
+                    <p>Real-time DDoS attack detection and mitigation with automatic IP blocking and traffic filtering.</p>
+                    <span class="badge badge-green">Active</span>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card animate">
+                    <div class="feature-icon blue">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>SSL/TLS Encryption</h3>
+                    <p>256-bit SSL encryption for all data in transit. Automatic HTTPS redirects and HSTS enabled.</p>
+                    <span class="badge badge-green">256-bit</span>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card animate">
+                    <div class="feature-icon purple">
+                        <i class="fas fa-shield-virus"></i>
+                    </div>
+                    <h3>XSS Prevention</h3>
+                    <p>Advanced cross-site scripting protection with Content Security Policy headers and input sanitization.</p>
+                    <span class="badge badge-green">Enabled</span>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card animate">
+                    <div class="feature-icon red">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>SQL Injection Guard</h3>
+                    <p>Parameterized queries and input validation prevent SQL injection attacks on your database.</p>
+                    <span class="badge badge-green">Blocked</span>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card animate">
+                    <div class="feature-icon orange">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>CSRF Protection</h3>
+                    <p>Cross-Site Request Forgery tokens on all forms prevent unauthorized actions on behalf of users.</p>
+                    <span class="badge badge-green">Active</span>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card animate">
+                    <div class="feature-icon cyan">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Rate Limiting</h3>
+                    <p>Intelligent rate limiting prevents brute force attacks, API abuse, and resource exhaustion.</p>
+                    <span class="badge badge-green">100 req/min</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    HOW IT WORKS SECTION
+    ============================================ -->
+    <section class="section bg-light" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Process</span>
+                <h2 class="section-title">How Our Security Works</h2>
+                <p class="section-description">Four layers of protection for complete peace of mind</p>
+            </div>
+            
+            <div class="steps-grid">
+                <div class="step-card animate">
+                    <div class="step-number">01</div>
+                    <div class="step-icon"><i class="fas fa-search"></i></div>
+                    <h3>Request Validation</h3>
+                    <p>Every incoming request is analyzed, sanitized, and validated against known attack patterns before processing.</p>
+                </div>
+                
+                <div class="step-card animate">
+                    <div class="step-number">02</div>
+                    <div class="step-icon"><i class="fas fa-fire"></i></div>
+                    <h3>Firewall Analysis</h3>
+                    <p>Our advanced firewall checks IP reputation, request headers, and traffic patterns to block malicious requests instantly.</p>
+                </div>
+                
+                <div class="step-card animate">
+                    <div class="step-number">03</div>
+                    <div class="step-icon"><i class="fas fa-gauge-high"></i></div>
+                    <h3>Rate Limiting</h3>
+                    <p>Intelligent throttling prevents abuse while allowing legitimate traffic. Custom limits per endpoint.</p>
+                </div>
+                
+                <div class="step-card animate">
+                    <div class="step-number">04</div>
+                    <div class="step-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <h3>Audit Logging</h3>
+                    <p>All security events, access attempts, and system changes are logged for complete visibility and compliance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    SECURITY STATS SECTION
+    ============================================ -->
+    <section class="section" id="stats">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Live Stats</span>
+                <h2 class="section-title">Real-Time Security Metrics</h2>
+                <p class="section-description">Current security status and threat intelligence</p>
+            </div>
+            
+            <div class="stats-dashboard">
+                <div class="stat-widget">
+                    <div class="stat-icon"><i class="fas fa-ban"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="liveBlockedIPs">0</span>
+                        <span class="stat-label">Blocked IPs</span>
+                    </div>
+                </div>
+                <div class="stat-widget">
+                    <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="liveRateHits">0</span>
+                        <span class="stat-label">Rate Limit Hits</span>
+                    </div>
+                </div>
+                <div class="stat-widget">
+                    <div class="stat-icon"><i class="fas fa-shield-virus"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="liveAttacksBlocked">0</span>
+                        <span class="stat-label">Attacks Blocked</span>
+                    </div>
+                </div>
+                <div class="stat-widget">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="liveUptime">0s</span>
+                        <span class="stat-label">Uptime</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    CONTACT SECTION
+    ============================================ -->
+    <section class="section bg-dark" id="contact">
+        <div class="container">
+            <div class="section-header light">
+                <span class="section-badge">Get In Touch</span>
+                <h2 class="section-title">Need Security Help?</h2>
+                <p class="section-description">Our security experts are available 24/7 to assist you</p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div><strong>Email</strong><span>security@securesite.com</span></div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div><strong>Phone</strong><span>+91 9876543210</span></div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div><strong>Location</strong><span>Mumbai, India</span></div>
+                    </div>
+                </div>
+                
+                <form class="contact-form" id="contactForm" onsubmit="return handleContactSubmit(event)">
+                    <div class="form-group">
+                        <input type="text" id="contactName" placeholder="Your Name" required minlength="2" maxlength="100" aria-label="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="contactEmail" placeholder="Your Email" required aria-label="Your Email">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="contactMessage" placeholder="Your Message" rows="4" required minlength="10" maxlength="1000" aria-label="Your Message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    FOOTER
+    ============================================ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4><i class="fas fa-shield-alt"></i> SecureSite</h4>
+                    <p>Enterprise-grade security for modern websites. Protecting businesses since 2024 with cutting-edge security solutions.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="/">Home</a>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="admin.html">Admin Panel</a>
+                    <a href="login.html">Login</a>
+                    <a href="security-dashboard.html">Security Status</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Security Features</h4>
+                    <span><i class="fas fa-check"></i> DDoS Protection</span>
+                    <span><i class="fas fa-check"></i> SSL Encryption</span>
+                    <span><i class="fas fa-check"></i> XSS Prevention</span>
+                    <span><i class="fas fa-check"></i> SQL Injection Guard</span>
+                    <span><i class="fas fa-check"></i> Rate Limiting</span>
+                </div>
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p>Stay updated with security news.</p>
+                    <form class="newsletter-form" onsubmit="return false">
+                        <input type="email" placeholder="Enter your email" aria-label="Newsletter email">
+                        <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SecureSite. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+                <p class="footer-tagline">Protected by Security System v2.0 | 256-bit SSL Encryption</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================
+    SCRIPTS
+    ============================================ -->
+    <script>
+        // ============================================
+        // MOBILE MENU TOGGLE
+        // ============================================
+        function toggleMobileMenu() {
+            const nav = document.getElementById('nav');
+            const toggle = document.getElementById('menuToggle');
+            const isOpen = nav.classList.toggle('open');
+            toggle.classList.toggle('active');
+            toggle.setAttribute('aria-expanded', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        }
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('nav').classList.remove('open');
+                document.getElementById('menuToggle').classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // ============================================
+        // AUTH UI UPDATE
+        // ============================================
+        function updateAuthUI() {
+            const isLoggedIn = typeof AuthGuard !== 'undefined' && AuthGuard.isAuthenticated();
+            document.getElementById('loginBtn').style.display = isLoggedIn ? 'none' : 'inline-flex';
+            document.getElementById('logoutBtn').style.display = isLoggedIn ? 'inline-flex' : 'none';
+        }
+
+        function handleLogout() {
+            if (typeof AuthGuard !== 'undefined') {
+                AuthGuard.logout();
+            }
+            updateAuthUI();
+        }
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const animationObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-up');
+                    animationObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .step-card, .stat-widget, .animate').forEach(el => {
+            animationObserver.observe(el);
+        });
+
+        // ============================================
+        // LIVE STATS UPDATE
+        // ============================================
+        const startTime = Date.now();
+
+        function updateLiveStats() {
+            if (typeof Firewall !== 'undefined') {
+                document.getElementById('liveBlockedIPs').textContent = Firewall.getStats().blockedIPs || 0;
+            }
+            if (typeof RateLimiter !== 'undefined') {
+                document.getElementById('liveRateHits').textContent = RateLimiter.getStats().activeKeys || 0;
+            }
+            if (typeof Security !== 'undefined') {
+                document.getElementById('liveAttacksBlocked').textContent = Security.attackCount || 0;
+            }
+            document.getElementById('liveUptime').textContent = Math.floor((Date.now() - startTime) / 1000) + 's';
+        }
+
+        setInterval(updateLiveStats, 3000);
+
+        // ============================================
+        // CONTACT FORM HANDLER
+        // ============================================
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+            
+            // Validate
+            if (typeof Validator !== 'undefined') {
+                if (!Validator.validateEmail(email)) {
+                    showNotification('Please enter a valid email address.', 'error');
+                    return false;
+                }
+            }
+            
+            // Sanitize
+            const safeName = typeof Validator !== 'undefined' ? Validator.sanitize(name) : name;
+            const safeMessage = typeof Validator !== 'undefined' ? Validator.sanitize(message) : message;
+            
+            // Log
+            if (typeof Logger !== 'undefined') {
+                Logger.log('contact_form', email, { name: safeName });
+            }
+            
+            // Show success
+            showNotification('✅ Message sent successfully! We will get back to you soon.', 'success');
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+            
+            return false;
+        }
+
+        // ============================================
+        // NOTIFICATION TOAST
+        // ============================================
+        function showNotification(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast-notification toast-${type}`;
+            toast.innerHTML = `
+                <span class="toast-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                <span class="toast-message">${message}</span>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // ============================================
+        // SMOOTH SCROLL FOR ANCHOR LINKS
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            updateLiveStats();
+            
+            // Add scrolled class to header on scroll
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('header');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            
+            console.log('🛡️ SecureSite Homepage Ready');
+            console.log('✅ All security modules loaded');
+        });
+
+        // ============================================
+        // KEYBOARD NAVIGATION
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            // Close mobile menu on Escape
+            if (e.key === 'Escape') {
+                document.getElementById('nav').classList.remove('open');
+                document.getElementById('menuToggle').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

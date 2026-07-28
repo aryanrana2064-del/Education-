@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — Page Not Found | Secure Website</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="The page you are looking for does not exist or has been moved.">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/security.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <script src="security/security-core.js" defer></script>
+    <script src="security/logger.js" defer></script>
+</head>
+<body class="error-body">
+    <!-- ============================================
+    ERROR PAGE CONTAINER
+    ============================================ -->
+    <div class="error-wrapper">
+        <div class="error-container animate fade-in-up">
+            <!-- Error Icon -->
+            <div class="error-icon-container">
+                <div class="error-icon-circle">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="error-icon-pulse"></div>
+            </div>
+
+            <!-- Error Code -->
+            <div class="error-code">
+                <span class="error-digit">4</span>
+                <span class="error-digit zero">0</span>
+                <span class="error-digit">4</span>
+            </div>
+
+            <!-- Error Message -->
+            <h1 class="error-title">Page Not Found</h1>
+            <p class="error-description">
+                The page you are looking for might have been removed,<br>
+                had its name changed, or is temporarily unavailable.
+            </p>
+
+            <!-- Possible Causes -->
+            <div class="error-causes">
+                <div class="cause-item">
+                    <i class="fas fa-link-slash"></i>
+                    <span>Broken or outdated link</span>
+                </div>
+                <div class="cause-item">
+                    <i class="fas fa-edit"></i>
+                    <span>Page moved or renamed</span>
+                </div>
+                <div class="cause-item">
+                    <i class="fas fa-keyboard"></i>
+                    <span>Typo in the URL</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="error-actions">
+                <a href="/" class="btn btn-primary btn-lg">
+                    <i class="fas fa-home"></i> Go to Homepage
+                </a>
+                <a href="dashboard.html" class="btn btn-outline btn-lg">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <button class="btn btn-outline btn-lg" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Go Back
+                </button>
+            </div>
+
+            <!-- Search -->
+            <div class="error-search">
+                <p>Search our website:</p>
+                <div class="error-search-form">
+                    <input type="text" id="errorSearch" placeholder="Search for pages..." class="error-search-input" onkeydown="if(event.key==='Enter')searchSite()">
+                    <button class="btn btn-primary" onclick="searchSite()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="error-links">
+                <span>Quick Links:</span>
+                <a href="/">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="admin.html">Admin Panel</a>
+                <a href="login.html">Login</a>
+                <a href="security-dashboard.html">Security Status</a>
+                <a href="#contact">Contact Support</a>
+            </div>
+
+            <!-- Security Note -->
+            <div class="error-security-note">
+                <i class="fas fa-shield-alt"></i>
+                <span>This incident has been logged for security purposes.</span>
+            </div>
+        </div>
+
+        <!-- Error Illustration -->
+        <div class="error-illustration animate fade-in-right">
+            <div class="illustration-container">
+                <div class="file-icon">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="file-question">?</span>
+                </div>
+                <div class="magnifying-glass">
+                    <i class="fas fa-magnifying-glass"></i>
+                </div>
+                <div class="floating-element el-1">
+                    <i class="fas fa-circle"></i>
+                </div>
+                <div class="floating-element el-2">
+                    <i class="fas fa-square"></i>
+                </div>
+                <div class="floating-element el-3">
+                    <i class="fas fa-triangle"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="error-footer">
+        <div class="container">
+            <p>&copy; 2026 SecureSite. All rights reserved. | <a href="/">Home</a> | <a href="#contact">Contact</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Log the 404 event
+            log404Event();
+            
+            // Show the actual URL that was attempted
+            showAttemptedURL();
+            
+            // Animate the error digits
+            animateErrorDigits();
+            
+            console.log('📄 404 Error Page Loaded');
+        });
+
+        // ============================================
+        // LOG 404 EVENT
+        // ============================================
+        function log404Event() {
+            const attemptedURL = window.location.href;
+            const referrer = document.referrer || 'Direct';
+            
+            // Log to security logger
+            if (typeof Logger !== 'undefined') {
+                Logger.log('404_error', 'anonymous', {
+                    url: attemptedURL,
+                    referrer: referrer,
+                    userAgent: navigator.userAgent
+                });
+            }
+            
+            // Log to console
+            console.warn('⚠️ 404 Error:', {
+                url: attemptedURL,
+                referrer: referrer,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // ============================================
+        // SHOW ATTEMPTED URL
+        // ============================================
+        function showAttemptedURL() {
+            const url = window.location.pathname;
+            if (url && url !== '/' && url !== '/404.html') {
+                const description = document.querySelector('.error-description');
+                if (description) {
+                    const urlSpan = document.createElement('span');
+                    urlSpan.className = 'attempted-url';
+                    urlSpan.innerHTML = `<br><strong>Requested URL:</strong> <code>${escapeHTML(url)}</code>`;
+                    description.appendChild(urlSpan);
+                }
+            }
+        }
+
+        // ============================================
+        // ANIMATE ERROR DIGITS
+        // ============================================
+        function animateErrorDigits() {
+            const digits = document.querySelectorAll('.error-digit');
+            digits.forEach((digit, index) => {
+                digit.style.animation = `bounceIn 0.6s ${0.2 + index * 0.15}s ease both`;
+            });
+        }
+
+        // ============================================
+        // GO BACK FUNCTION
+        // ============================================
+        function goBack() {
+            if (document.referrer && document.referrer !== window.location.href) {
+                window.history.back();
+            } else {
+                window.location.href = '/';
+            }
+        }
+
+        // ============================================
+        // SEARCH FUNCTION
+        // ============================================
+        function searchSite() {
+            const query = document.getElementById('errorSearch').value.trim();
+            if (!query) {
+                alert('Please enter a search term.');
+                return;
+            }
+            
+            // Sanitize search query
+            const safeQuery = typeof Validator !== 'undefined' ? 
+                Validator.sanitize(query, 'alphanumeric') : 
+                query.replace(/[^a-zA-Z0-9\s]/g, '').trim();
+            
+            if (!safeQuery) {
+                alert('Invalid search term.');
+                return;
+            }
+            
+            // Show searching message
+            const searchBtn = document.querySelector('.error-search-form .btn');
+            const originalHTML = searchBtn.innerHTML;
+            searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            searchBtn.disabled = true;
+            
+            // Simulate search
+            setTimeout(() => {
+                searchBtn.innerHTML = originalHTML;
+                searchBtn.disabled = false;
+                alert(`Search for "${safeQuery}" — No results found on this site.\n\nTry:\n• Homepage\n• Dashboard\n• Security Status`);
+            }, 1000);
+        }
+
+        // ============================================
+        // UTILITIES
+        // ============================================
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'Escape':
+                    goBack();
+                    break;
+                case 'h':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        window.location.href = '/';
+                    }
+                    break;
+                case '/':
+                    if (!e.ctrlKey && !e.metaKey && document.activeElement?.tagName !== 'INPUT') {
+                        e.preventDefault();
+                        document.getElementById('errorSearch')?.focus();
+                    }
+                    break;
+            }
+        });
+
+        // ============================================
+        // AUTO-REDIRECT (Optional — 30 seconds)
+        // ============================================
+        let redirectCountdown = 30;
+        const redirectMessage = document.createElement('p');
+        redirectMessage.className = 'redirect-message';
+        redirectMessage.style.cssText = 'text-align:center;margin-top:16px;font-size:12px;color:var(--text-muted)';
+        
+        const actionsDiv = document.querySelector('.error-actions');
+        if (actionsDiv) {
+            actionsDiv.after(redirectMessage);
+            
+            const countdownInterval = setInterval(() => {
+                redirectCountdown--;
+                redirectMessage.textContent = `Auto-redirecting to homepage in ${redirectCountdown} seconds...`;
+                
+                if (redirectCountdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = '/';
+                }
+            }, 1000);
+            
+            // Cancel auto-redirect on any button click
+            document.querySelectorAll('.error-actions .btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clearInterval(countdownInterval);
+                    redirectMessage.textContent = '';
+                });
+            });
+        }
+    </script>
+
+    <!-- Additional Styles for Error Page -->
+    <style>
+        /* Error Page Specific Styles */
+        .error-body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            padding: 40px 20px;
+        }
+
+        .error-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .error-container {
+            flex: 1;
+            text-align: center;
+        }
+
+        .error-icon-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .error-icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.1);
+            border: 3px solid rgba(239, 68, 68, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #ef4444;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-icon-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid rgba(239, 68, 68, 0.2);
+            animation: pulseError 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseError {
+            0%, 100% { width: 80px; height: 80px; opacity: 1; }
+            50% { width: 120px; height: 120px; opacity: 0; }
+        }
+
+        .error-code {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(80px, 12vw, 120px);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .error-digit {
+            display: inline-block;
+            background: linear-gradient(180deg, #ef4444, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .error-digit.zero {
+            background: linear-gradient(180deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .error-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+        }
+
+        .error-description {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .error-description code {
+            background: rgba(255,255,255,0.05);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #f59e0b;
+            word-break: break-all;
+        }
+
+        .error-causes {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .cause-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .cause-item i {
+            color: #f59e0b;
+            font-size: 14px;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .error-search {
+            margin-bottom: 24px;
+        }
+
+        .error-search p {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .error-search-form {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .error-search-input {
+            padding: 10px 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            color: #fff;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            width: 250px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .error-search-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .error-links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .error-links a {
+            color: #3b82f6;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .error-links a:hover {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+
+        .error-security-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px;
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+            font-size: 11px;
+            color: #10b981;
+        }
+
+        .error-illustration {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .illustration-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+        }
+
+        .file-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            color: rgba(255,255,255,0.06);
+            z-index: 1;
+        }
+
+        .file-question {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Poppins', sans-serif;
+            font-size: 40px;
+            font-weight: 900;
+            color: #ef4444;
+            z-index: 2;
+        }
+
+        .magnifying-glass {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 40px;
+            color: rgba(255,255,255,0.08);
+            animation: floatGlass 3s ease-in-out infinite;
+        }
+
+        @keyframes floatGlass {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(-5deg); }
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.3;
+        }
+
+        .el-1 { top: 20px; left: 40px; animation: floatEl 4s ease-in-out infinite; color: #3b82f6; font-size: 10px; }
+        .el-2 { bottom: 40px; right: 50px; animation: floatEl 3s ease-in-out 1s infinite; color: #8b5cf6; font-size: 8px; }
+        .el-3 { top: 80px; right: 70px; animation: floatEl 5s ease-in-out 2s infinite; color: #f59e0b; font-size: 6px; }
+
+        @keyframes floatEl {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .error-footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #475569;
+            font-size: 12px;
+        }
+
+        .error-footer a {
+            color: #64748b;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .error-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .error-illustration {
+                display: none;
+            }
+            .error-code {
+                font-size: 60px;
+            }
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</body>
+</html>

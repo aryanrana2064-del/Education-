@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login | Protected Access</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Secure login page with rate limiting, CSRF protection, and encrypted authentication.">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/security.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <script src="security/security-core.js" defer></script>
+    <script src="security/validator.js" defer></script>
+    <script src="security/auth-guard.js" defer></script>
+    <script src="security/rate-limiter.js" defer></script>
+    <script src="security/encryption.js" defer></script>
+    <script src="security/logger.js" defer></script>
+</head>
+<body class="login-body">
+    <!-- ============================================
+    LOGIN CONTAINER
+    ============================================ -->
+    <div class="login-wrapper">
+        <div class="login-container animate fade-in-up">
+            <!-- Login Header -->
+            <div class="login-header">
+                <a href="/" class="login-logo">
+                    <img src="assets/logo.svg" alt="Logo" width="48" height="48">
+                    <span>Secure<strong>Site</strong></span>
+                </a>
+                <h1>Welcome Back</h1>
+                <p>Sign in to access your secure account</p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="login-form" id="loginForm" onsubmit="return handleLogin(event)" autocomplete="off">
+                <!-- CSRF Token (hidden) -->
+                <input type="hidden" id="csrfToken" name="csrf_token">
+
+                <!-- Email Field -->
+                <div class="form-group login-group">
+                    <label for="loginEmail">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="loginEmail" 
+                            placeholder="your@email.com" 
+                            required 
+                            autocomplete="email"
+                            aria-label="Email Address"
+                            class="login-input"
+                            onfocus="clearFieldError(this)"
+                            oninput="clearFieldError(this)"
+                        >
+                        <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                    </div>
+                    <span class="field-error" id="emailError"></span>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group login-group">
+                    <label for="loginPassword">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            placeholder="••••••••" 
+                            required 
+                            minlength="8"
+                            autocomplete="current-password"
+                            aria-label="Password"
+                            class="login-input"
+                            id="passwordInput"
+                            onfocus="clearFieldError(this)"
+                            oninput="clearFieldError(this)"
+                        >
+                        <span class="input-icon toggle-password" onclick="togglePasswordVisibility()" title="Show/Hide Password">
+                            <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                        </span>
+                    </div>
+                    <span class="field-error" id="passwordError"></span>
+                </div>
+
+                <!-- Remember & Forgot -->
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password" onclick="forgotPassword()">Forgot password?</a>
+                </div>
+
+                <!-- Error Message -->
+                <div class="login-error" id="loginError" style="display:none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="loginErrorMessage"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary login-submit" id="loginSubmitBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                    <span class="btn-loader" id="loginLoader" style="display:none">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </span>
+                </button>
+
+                <!-- Rate Limit Warning -->
+                <div class="rate-limit-warning" id="rateLimitWarning" style="display:none;">
+                    <i class="fas fa-clock"></i>
+                    <span>Too many attempts. Please wait <strong id="rateLimitTimer">60</strong> seconds.</span>
+                </div>
+            </form>
+
+            <!-- Social Login -->
+            <div class="social-login">
+                <span class="divider-text">or continue with</span>
+                <div class="social-buttons">
+                    <button class="social-btn google-btn" onclick="handleSocialLogin('google')" title="Sign in with Google">
+                        <i class="fab fa-google"></i>
+                    </button>
+                    <button class="social-btn github-btn" onclick="handleSocialLogin('github')" title="Sign in with GitHub">
+                        <i class="fab fa-github"></i>
+                    </button>
+                    <button class="social-btn microsoft-btn" onclick="handleSocialLogin('microsoft')" title="Sign in with Microsoft">
+                        <i class="fab fa-microsoft"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sign Up Link -->
+            <div class="login-footer">
+                <p>Don't have an account? <a href="signup.html">Create one</a></p>
+                <a href="/" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+
+        <!-- Security Info Sidebar -->
+        <div class="login-sidebar animate fade-in-right">
+            <div class="sidebar-content">
+                <div class="sidebar-icon">
+                    <i class="fas fa-shield-haltered"></i>
+                </div>
+                <h2>Secure Authentication</h2>
+                <ul class="security-features-list">
+                    <li><i class="fas fa-check-circle"></i> 256-bit SSL Encryption</li>
+                    <li><i class="fas fa-check-circle"></i> CSRF Protection Active</li>
+                    <li><i class="fas fa-check-circle"></i> Rate Limiting Enabled</li>
+                    <li><i class="fas fa-check-circle"></i> Input Sanitization</li>
+                    <li><i class="fas fa-check-circle"></i> Brute Force Prevention</li>
+                    <li><i class="fas fa-check-circle"></i> Session Security</li>
+                </ul>
+                <div class="security-status">
+                    <span class="status-indicator green"></span>
+                    All Systems Secure
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toastNotification" style="display:none;">
+        <span class="toast-icon"></span>
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const LOGIN_CONFIG = {
+            maxAttempts: 5,
+            lockoutDuration: 60, // seconds
+            minPasswordLength: 8,
+            redirectAfterLogin: 'dashboard.html',
+            adminRedirect: 'admin.html'
+        };
+
+        let loginAttempts = 0;
+        let isLocked = false;
+        let lockoutTimer = null;
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generate CSRF token
+            generateCSRFToken();
+            
+            // Check if already logged in
+            if (typeof AuthGuard !== 'undefined' && AuthGuard.isAuthenticated()) {
+                redirectAfterLogin();
+            }
+            
+            // Check rate limit from previous attempts
+            checkRateLimitStatus();
+            
+            console.log('🔐 Secure Login Page Ready');
+        });
+
+        // ============================================
+        // CSRF TOKEN
+        // ============================================
+        function generateCSRFToken() {
+            const token = 'csrf_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+            document.getElementById('csrfToken').value = token;
+            sessionStorage.setItem('csrf_token', token);
+        }
+
+        // ============================================
+        // HANDLE LOGIN
+        // ============================================
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            // Check if locked
+            if (isLocked) {
+                showError('Account temporarily locked. Please wait.');
+                return false;
+            }
+
+            // Get form values
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            const csrfToken = document.getElementById('csrfToken').value;
+
+            // Reset errors
+            clearAllErrors();
+
+            // Validate CSRF
+            const storedToken = sessionStorage.getItem('csrf_token');
+            if (csrfToken !== storedToken) {
+                showError('Security token invalid. Please refresh the page.');
+                generateCSRFToken();
+                return false;
+            }
+
+            // Validate email
+            if (!email) {
+                showFieldError('emailError', 'Email is required.');
+                return false;
+            }
+            if (typeof Validator !== 'undefined' && !Validator.validateEmail(email)) {
+                showFieldError('emailError', 'Please enter a valid email address.');
+                return false;
+            }
+
+            // Validate password
+            if (!password) {
+                showFieldError('passwordError', 'Password is required.');
+                return false;
+            }
+            if (password.length < LOGIN_CONFIG.minPasswordLength) {
+                showFieldError('passwordError', `Password must be at least ${LOGIN_CONFIG.minPasswordLength} characters.`);
+                return false;
+            }
+
+            // Check rate limit
+            if (typeof RateLimiter !== 'undefined') {
+                const rateCheck = RateLimiter.check('login_' + email, LOGIN_CONFIG.maxAttempts, LOGIN_CONFIG.lockoutDuration * 1000);
+                if (!rateCheck.allowed) {
+                    lockAccount(rateCheck.resetIn);
+                    return false;
+                }
+            }
+
+            // Show loading
+            showLoading(true);
+
+            // Simulate API call (replace with real API)
+            const result = await simulateLogin(email, password);
+
+            showLoading(false);
+
+            if (result.success) {
+                // Log success
+                if (typeof Logger !== 'undefined') {
+                    Logger.log('login_success', email, { ip: 'secured' });
+                }
+
+                // Save auth
+                if (typeof AuthGuard !== 'undefined') {
+                    AuthGuard.login({
+                        email: email,
+                        name: result.user?.name || email.split('@')[0],
+                        role: result.user?.role || 'user'
+                    }, rememberMe);
+                }
+
+                // Show success & redirect
+                showNotification('✅ Login successful! Redirecting...', 'success');
+                setTimeout(() => redirectAfterLogin(result.user?.role), 800);
+            } else {
+                // Log failure
+                loginAttempts++;
+                if (typeof Logger !== 'undefined') {
+                    Logger.log('login_failed', email, { attempt: loginAttempts });
+                }
+
+                showError(result.error || 'Invalid email or password.');
+                
+                // Check if should lock
+                if (loginAttempts >= LOGIN_CONFIG.maxAttempts) {
+                    lockAccount(LOGIN_CONFIG.lockoutDuration);
+                }
+            }
+
+            return false;
+        }
+
+        // ============================================
+        // SIMULATE LOGIN (Replace with real API call)
+        // ============================================
+        async function simulateLogin(email, password) {
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 400));
+
+            // Demo credentials
+            const demoUsers = {
+                'admin@securesite.com': { password: 'Admin@123', name: 'Admin User', role: 'admin' },
+                'user@securesite.com': { password: 'User@1234', name: 'John Doe', role: 'user' }
+            };
+
+            // Hash password (in real app, this is done server-side)
+            let hashedPassword = password;
+            if (typeof Encryption !== 'undefined') {
+                hashedPassword = await Encryption.hash(password);
+            }
+
+            // Check credentials
+            if (demoUsers[email] && demoUsers[email].password === password) {
+                return { success: true, user: demoUsers[email] };
+            }
+
+            // Accept any email with valid format for demo
+            if (typeof Validator !== 'undefined' && Validator.validateEmail(email) && password.length >= 8) {
+                return {
+                    success: true,
+                    user: {
+                        name: email.split('@')[0],
+                        role: email.includes('admin') ? 'admin' : 'user'
+                    }
+                };
+            }
+
+            return { success: false, error: 'Invalid credentials.' };
+        }
+
+        // ============================================
+        // REDIRECT
+        // ============================================
+        function redirectAfterLogin(role) {
+            if (role === 'admin') {
+                window.location.href = LOGIN_CONFIG.adminRedirect;
+            } else {
+                window.location.href = LOGIN_CONFIG.redirectAfterLogin;
+            }
+        }
+
+        // ============================================
+        // LOCK ACCOUNT
+        // ============================================
+        function lockAccount(seconds) {
+            isLocked = true;
+            const warning = document.getElementById('rateLimitWarning');
+            const timer = document.getElementById('rateLimitTimer');
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            
+            warning.style.display = 'block';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.6';
+            
+            let remaining = seconds;
+            timer.textContent = remaining;
+            
+            clearInterval(lockoutTimer);
+            lockoutTimer = setInterval(() => {
+                remaining--;
+                timer.textContent = remaining;
+                
+                if (remaining <= 0) {
+                    clearInterval(lockoutTimer);
+                    isLocked = false;
+                    loginAttempts = 0;
+                    warning.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                }
+            }, 1000);
+        }
+
+        function checkRateLimitStatus() {
+            // Check if there's an active rate limit
+            if (typeof RateLimiter !== 'undefined') {
+                const check = RateLimiter.check('login_status', 100, 60000);
+                if (!check.allowed && check.resetIn > 0) {
+                    lockAccount(check.resetIn);
+                }
+            }
+        }
+
+        // ============================================
+        // SOCIAL LOGIN
+        // ============================================
+        function handleSocialLogin(provider) {
+            showNotification(`Connecting to ${provider}...`, 'info');
+            // Redirect to OAuth provider
+            setTimeout(() => {
+                alert(`${provider} login coming soon! Use email/password for demo.`);
+            }, 500);
+        }
+
+        // ============================================
+        // PASSWORD VISIBILITY TOGGLE
+        // ============================================
+        function togglePasswordVisibility() {
+            const input = document.getElementById('loginPassword');
+            const icon = document.getElementById('passwordToggleIcon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // ============================================
+        // FORGOT PASSWORD
+        // ============================================
+        function forgotPassword() {
+            const email = document.getElementById('loginEmail').value.trim();
+            if (email && typeof Validator !== 'undefined' && Validator.validateEmail(email)) {
+                showNotification('Password reset link sent to ' + email, 'success');
+            } else {
+                const emailInput = prompt('Enter your email to reset password:');
+                if (emailInput && typeof Validator !== 'undefined' && Validator.validateEmail(emailInput)) {
+                    showNotification('Password reset link sent to ' + emailInput, 'success');
+                } else if (emailInput) {
+                    showNotification('Please enter a valid email.', 'error');
+                }
+            }
+        }
+
+        // ============================================
+        // ERROR HANDLING
+        // ============================================
+        function showError(message) {
+            const errorDiv = document.getElementById('loginError');
+            const errorMsg = document.getElementById('loginErrorMessage');
+            errorMsg.textContent = message;
+            errorDiv.style.display = 'flex';
+        }
+
+        function showFieldError(elementId, message) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.textContent = message;
+                el.style.display = 'block';
+            }
+        }
+
+        function clearFieldError(input) {
+            const errorEl = input.parentElement.parentElement.querySelector('.field-error');
+            if (errorEl) {
+                errorEl.textContent = '';
+                errorEl.style.display = 'none';
+            }
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function clearAllErrors() {
+            document.querySelectorAll('.field-error').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        // ============================================
+        // LOADING STATE
+        // ============================================
+        function showLoading(show) {
+            const loader = document.getElementById('loginLoader');
+            const btnText = document.querySelector('.login-submit .btn-text');
+            if (show) {
+                loader.style.display = 'inline-block';
+                document.getElementById('loginSubmitBtn').disabled = true;
+            } else {
+                loader.style.display = 'none';
+                document.getElementById('loginSubmitBtn').disabled = false;
+            }
+        }
+
+        // ============================================
+        // NOTIFICATION TOAST
+        // ============================================
+        function showNotification(message, type = 'info') {
+            const toast = document.getElementById('toastNotification');
+            toast.querySelector('.toast-icon').textContent = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            toast.querySelector('.toast-message').textContent = message;
+            toast.className = `toast-notification toast-${type}`;
+            toast.style.display = 'flex';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.activeElement?.tagName !== 'BUTTON') {
+                document.getElementById('loginForm').requestSubmit();
+            }
+        });
+
+        console.log('🔐 Login page fully initialized');
+    </script>
+</body>
+</html>

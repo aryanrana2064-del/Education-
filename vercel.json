@@ -1,0 +1,247 @@
+{
+  "version": 2,
+  "name": "secure-website",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-DNS-Prefetch-Control",
+          "value": "off"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, must-revalidate"
+        }
+      ]
+    }
+  ],
+  
+  "rewrites": [
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/security",
+      "destination": "/security-dashboard.html"
+    },
+    {
+      "source": "/api/login",
+      "destination": "/api/login.js"
+    },
+    {
+      "source": "/api/logout",
+      "destination": "/api/logout.js"
+    },
+    {
+      "source": "/api/verify-token",
+      "destination": "/api/verify-token.js"
+    },
+    {
+      "source": "/api/health-check",
+      "destination": "/api/health-check.js"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1.js"
+    }
+  ],
+  
+  "redirects": [
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/admin.html",
+      "destination": "/admin",
+      "permanent": true
+    },
+    {
+      "source": "/dashboard.html",
+      "destination": "/dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/login.html",
+      "destination": "/login",
+      "permanent": true
+    },
+    {
+      "source": "/security-dashboard.html",
+      "destination": "/security",
+      "permanent": true
+    },
+    {
+      "source": "/404.html",
+      "destination": "/404",
+      "permanent": true
+    },
+    {
+      "source": "/500.html",
+      "destination": "/500",
+      "permanent": true
+    }
+  ],
+  
+  "routes": [
+    {
+      "src": "/css/(.*)",
+      "dest": "/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/js/$1"
+    },
+    {
+      "src": "/security/(.*)",
+      "dest": "/security/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/middleware/(.*)",
+      "dest": "/middleware/$1"
+    },
+    {
+      "src": "/config/(.*)",
+      "dest": "/config/$1"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/docs/(.*)",
+      "dest": "/docs/$1"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/robots.txt"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "/sitemap.xml"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/assets/favicon.ico"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+
+  "functions": {
+    "api/login.js": {
+      "memory": 256,
+      "maxDuration": 10
+    },
+    "api/logout.js": {
+      "memory": 128,
+      "maxDuration": 5
+    },
+    "api/verify-token.js": {
+      "memory": 128,
+      "maxDuration": 5
+    },
+    "api/health-check.js": {
+      "memory": 128,
+      "maxDuration": 5
+    }
+  },
+
+  "github": {
+    "enabled": true,
+    "autoAlias": true,
+    "silent": false
+  },
+
+  "env": {
+    "APP_NAME": "Secure Website",
+    "APP_ENV": "production",
+    "APP_DEBUG": "false"
+  },
+
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+
+  "regions": ["bom1", "sin1", "iad1"],
+  
+  "framework": null
+}

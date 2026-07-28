@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 — Server Error | Secure Website</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Internal server error. Our team has been notified and is working on a fix.">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/security.css">
+    
+    <script src="security/security-core.js" defer></script>
+    <script src="security/logger.js" defer></script>
+</head>
+<body class="error-body server-error-body">
+    <!-- ============================================
+    ERROR PAGE CONTAINER
+    ============================================ -->
+    <div class="error-wrapper">
+        <div class="error-container animate fade-in-up">
+            <!-- Server Error Icon -->
+            <div class="server-error-icon">
+                <div class="server-icon-outer">
+                    <div class="server-icon-inner">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="server-pulse"></div>
+                </div>
+                <div class="server-spark spark-1">⚡</div>
+                <div class="server-spark spark-2">⚡</div>
+            </div>
+
+            <!-- Error Code -->
+            <div class="error-code server-code">
+                <span class="error-digit five">5</span>
+                <span class="error-digit zero">0</span>
+                <span class="error-digit zero">0</span>
+            </div>
+
+            <!-- Error Message -->
+            <h1 class="error-title">Internal Server Error</h1>
+            <p class="error-description">
+                Something went wrong on our end.<br>
+                Our engineering team has been automatically notified<br>
+                and is working to resolve the issue.
+            </p>
+
+            <!-- Status Information -->
+            <div class="server-status-info">
+                <div class="status-item">
+                    <i class="fas fa-check-circle green"></i>
+                    <span>Error logged automatically</span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-check-circle green"></i>
+                    <span>Team notified instantly</span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-sync-alt fa-spin yellow"></i>
+                    <span>Automatic recovery in progress</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="error-actions">
+                <button class="btn btn-primary btn-lg" onclick="retryPage()">
+                    <i class="fas fa-redo"></i> Retry
+                </button>
+                <a href="/" class="btn btn-outline btn-lg">
+                    <i class="fas fa-home"></i> Go to Homepage
+                </a>
+                <button class="btn btn-outline btn-lg" onclick="reportIssue()">
+                    <i class="fas fa-bug"></i> Report Issue
+                </button>
+            </div>
+
+            <!-- Auto-retry countdown -->
+            <div class="retry-countdown" id="retryCountdown">
+                <i class="fas fa-clock"></i>
+                <span>Auto-retrying in <strong id="countdownTimer">30</strong> seconds...</span>
+                <button class="btn btn-sm btn-outline" onclick="cancelAutoRetry()">Cancel</button>
+            </div>
+
+            <!-- Security Note -->
+            <div class="error-security-note server-note">
+                <i class="fas fa-shield-alt"></i>
+                <span>Your connection is secure. No data has been lost.</span>
+            </div>
+        </div>
+
+        <!-- Server Illustration -->
+        <div class="error-illustration server-illustration animate fade-in-right">
+            <div class="server-visual">
+                <div class="server-rack">
+                    <div class="server-unit unit-1">
+                        <div class="unit-light red"></div>
+                    </div>
+                    <div class="server-unit unit-2">
+                        <div class="unit-light green"></div>
+                    </div>
+                    <div class="server-unit unit-3">
+                        <div class="unit-light yellow blink"></div>
+                    </div>
+                </div>
+                <div class="server-shadow"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="error-footer">
+        <div class="container">
+            <p>&copy; 2026 SecureSite. All rights reserved. | <a href="/">Home</a> | <a href="mailto:support@securesite.com">Contact Support</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        let autoRetryInterval = null;
+        let retrySeconds = 30;
+        let autoRetryCancelled = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            log500Error();
+            startAutoRetry();
+            animateServerElements();
+            console.log('⚠️ 500 Error Page Loaded');
+        });
+
+        // ============================================
+        // LOG 500 ERROR
+        // ============================================
+        function log500Error() {
+            const errorInfo = {
+                url: window.location.href,
+                referrer: document.referrer || 'Direct',
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                errorType: '500_Internal_Server_Error'
+            };
+
+            if (typeof Logger !== 'undefined') {
+                Logger.log('500_error', 'system', errorInfo);
+            }
+
+            console.error('🔴 500 Internal Server Error:', errorInfo);
+        }
+
+        // ============================================
+        // AUTO RETRY SYSTEM
+        // ============================================
+        function startAutoRetry() {
+            if (autoRetryCancelled) return;
+            
+            const timerElement = document.getElementById('countdownTimer');
+            
+            autoRetryInterval = setInterval(() => {
+                retrySeconds--;
+                if (timerElement) {
+                    timerElement.textContent = retrySeconds;
+                }
+
+                if (retrySeconds <= 0) {
+                    clearInterval(autoRetryInterval);
+                    retryPage();
+                }
+            }, 1000);
+        }
+
+        function cancelAutoRetry() {
+            autoRetryCancelled = true;
+            clearInterval(autoRetryInterval);
+            
+            const countdownDiv = document.getElementById('retryCountdown');
+            if (countdownDiv) {
+                countdownDiv.innerHTML = '<i class="fas fa-check"></i> Auto-retry cancelled.';
+                countdownDiv.style.opacity = '0.6';
+            }
+        }
+
+        function retryPage() {
+            clearInterval(autoRetryInterval);
+            
+            // Show retrying message
+            const actionsDiv = document.querySelector('.error-actions');
+            if (actionsDiv) {
+                const retryingMsg = document.createElement('p');
+                retryingMsg.className = 'retrying-message';
+                retryingMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Retrying...';
+                retryingMsg.style.cssText = 'text-align:center;margin-top:12px;color:#3b82f6;font-size:14px';
+                actionsDiv.after(retryingMsg);
+            }
+
+            // Reload page
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+
+        // ============================================
+        // REPORT ISSUE
+        // ============================================
+        function reportIssue() {
+            const issueDetails = {
+                url: window.location.href,
+                time: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                screenSize: `${window.screen.width}x${window.screen.height}`
+            };
+
+            const issueText = encodeURIComponent(
+                `500 Server Error Report\n\n` +
+                `URL: ${issueDetails.url}\n` +
+                `Time: ${issueDetails.time}\n` +
+                `Browser: ${issueDetails.userAgent}\n` +
+                `Screen: ${issueDetails.screenSize}\n\n` +
+                `Description: (Please describe what you were doing)`
+            );
+
+            // Try to open email client
+            const emailLink = `mailto:support@securesite.com?subject=500 Server Error Report&body=${issueText}`;
+            
+            const opened = window.open(emailLink, '_blank');
+            
+            if (!opened) {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(decodeURIComponent(issueText))
+                    .then(() => alert('Error details copied to clipboard! Please email support@securesite.com'))
+                    .catch(() => alert('Please contact support@securesite.com with error details.'));
+            }
+        }
+
+        // ============================================
+        // ANIMATIONS
+        // ============================================
+        function animateServerElements() {
+            // Animate error digits
+            const digits = document.querySelectorAll('.error-digit');
+            digits.forEach((digit, index) => {
+                digit.style.animation = `bounceIn 0.6s ${0.3 + index * 0.2}s ease both`;
+            });
+
+            // Animate server lights
+            const lights = document.querySelectorAll('.unit-light');
+            lights.forEach(light => {
+                if (light.classList.contains('blink')) {
+                    light.style.animation = 'blinkLight 1s ease-in-out infinite';
+                }
+            });
+        }
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'r':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        retryPage();
+                    }
+                    break;
+                case 'Escape':
+                    cancelAutoRetry();
+                    break;
+                case 'h':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        window.location.href = '/';
+                    }
+                    break;
+            }
+        });
+
+        // ============================================
+        // PREVENT CACHING OF ERROR PAGE
+        // ============================================
+        // Add timestamp to force fresh load on retry
+        if (!window.location.search.includes('retry=')) {
+            const separator = window.location.search ? '&' : '?';
+            window.history.replaceState({}, '', window.location.pathname + separator + 'retry=' + Date.now());
+        }
+    </script>
+
+    <!-- Additional Styles for 500 Page -->
+    <style>
+        .server-error-body {
+            background: linear-gradient(135deg, #1a0a0a 0%, #2d1a1a 50%, #1a0a0a 100%);
+        }
+
+        .server-error-icon {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+
+        .server-icon-outer {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.08);
+            border: 3px solid rgba(239, 68, 68, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .server-icon-inner {
+            font-size: 40px;
+            color: #ef4444;
+            animation: serverShake 0.5s ease-in-out infinite;
+        }
+
+        @keyframes serverShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .server-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            animation: serverPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes serverPulse {
+            0%, 100% { width: 100px; height: 100px; opacity: 0.8; }
+            50% { width: 140px; height: 140px; opacity: 0; }
+        }
+
+        .server-spark {
+            position: absolute;
+            font-size: 20px;
+            z-index: 3;
+        }
+
+        .spark-1 {
+            top: -5px;
+            right: -5px;
+            animation: sparkFloat 1.5s ease-in-out infinite;
+        }
+
+        .spark-2 {
+            bottom: 0;
+            left: -10px;
+            animation: sparkFloat 1.5s ease-in-out 0.5s infinite;
+        }
+
+        @keyframes sparkFloat {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(-12px); opacity: 0.4; }
+        }
+
+        .server-code .five {
+            background: linear-gradient(180deg, #ef4444, #b91c1c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .server-status-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .status-item .green { color: #10b981; }
+        .status-item .yellow { color: #f59e0b; }
+
+        .retry-countdown {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 10px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .retry-countdown strong {
+            color: #3b82f6;
+            font-size: 16px;
+        }
+
+        .server-note {
+            margin-top: 20px;
+            background: rgba(16, 185, 129, 0.05);
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+
+        /* Server Illustration */
+        .server-visual {
+            position: relative;
+        }
+
+        .server-rack {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+        }
+
+        .server-unit {
+            width: 200px;
+            height: 50px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: relative;
+        }
+
+        .unit-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .unit-light.red { background: #ef4444; box-shadow: 0 0 12px #ef4444; }
+        .unit-light.green { background: #10b981; box-shadow: 0 0 12px #10b981; }
+        .unit-light.yellow { background: #f59e0b; box-shadow: 0 0 12px #f59e0b; }
+
+        @keyframes blinkLight {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .unit-light.blink {
+            animation: blinkLight 0.8s ease-in-out infinite;
+        }
+
+        .server-shadow {
+            width: 180px;
+            height: 10px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.5), transparent);
+            margin: 10px auto 0;
+            border-radius: 50%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .server-illustration {
+                display: none;
+            }
+            .server-code {
+                font-size: 60px;
+            }
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</body>
+</html>

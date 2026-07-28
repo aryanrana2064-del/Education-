@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Secure Website</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Secure admin panel for website management, user control, and security monitoring.">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/security.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <script src="security/security-core.js" defer></script>
+    <script src="security/firewall.js" defer></script>
+    <script src="security/auth-guard.js" defer></script>
+    <script src="security/rate-limiter.js" defer></script>
+    <script src="security/validator.js" defer></script>
+    <script src="security/logger.js" defer></script>
+    <script src="security/encryption.js" defer></script>
+</head>
+<body>
+    <!-- ============================================
+    HEADER
+    ============================================ -->
+    <header class="header" id="header">
+        <div class="container header-inner">
+            <a href="/" class="logo" aria-label="Admin Home">
+                <img src="assets/security-icon.svg" alt="Admin Logo" width="40" height="40">
+                <div class="logo-text">
+                    <span class="logo-main">Admin <strong>Panel</strong></span>
+                    <span class="logo-sub">System Management</span>
+                </div>
+            </a>
+            <nav class="nav" id="nav">
+                <ul class="nav-list">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                    <li><a href="admin.html" class="nav-link active" aria-current="page">Admin</a></li>
+                    <li><a href="security-dashboard.html" class="nav-link">Security</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <span class="admin-badge" id="adminBadge"><i class="fas fa-crown"></i> Admin</span>
+                <button class="btn btn-outline btn-sm" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()" aria-label="Menu">
+                    <span class="menu-bar"></span><span class="menu-bar"></span><span class="menu-bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+    MAIN CONTENT
+    ============================================ -->
+    <main class="admin-main">
+        <div class="container">
+            <!-- Admin Header -->
+            <div class="admin-header animate fade-in">
+                <h1><i class="fas fa-crown"></i> Administration Panel</h1>
+                <p class="text-muted">Manage users, security settings, view logs, and control system configuration.</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="admin-stats-grid" id="adminStatsGrid">
+                <div class="admin-stat-card animate fade-in-up">
+                    <div class="admin-stat-icon blue"><i class="fas fa-users"></i></div>
+                    <div class="admin-stat-info">
+                        <span class="admin-stat-value" id="statTotalUsers">1,250</span>
+                        <span class="admin-stat-label">Total Users</span>
+                    </div>
+                </div>
+                <div class="admin-stat-card animate fade-in-up">
+                    <div class="admin-stat-icon green"><i class="fas fa-user-check"></i></div>
+                    <div class="admin-stat-info">
+                        <span class="admin-stat-value" id="statActiveUsers">89</span>
+                        <span class="admin-stat-label">Active Now</span>
+                    </div>
+                </div>
+                <div class="admin-stat-card animate fade-in-up">
+                    <div class="admin-stat-icon red"><i class="fas fa-ban"></i></div>
+                    <div class="admin-stat-info">
+                        <span class="admin-stat-value" id="statBlockedIPs">24</span>
+                        <span class="admin-stat-label">Blocked IPs</span>
+                    </div>
+                </div>
+                <div class="admin-stat-card animate fade-in-up">
+                    <div class="admin-stat-icon yellow"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="admin-stat-info">
+                        <span class="admin-stat-value" id="statThreatLevel">Low</span>
+                        <span class="admin-stat-label">Threat Level</span>
+                    </div>
+                </div>
+                <div class="admin-stat-card animate fade-in-up">
+                    <div class="admin-stat-icon purple"><i class="fas fa-clock"></i></div>
+                    <div class="admin-stat-info">
+                        <span class="admin-stat-value" id="statUptime">0h</span>
+                        <span class="admin-stat-label">Uptime</span>
+                    </div>
+                </div>
+                <div class="admin-stat-card animate fade-in-up">
+                    <div class="admin-stat-icon cyan"><i class="fas fa-database"></i></div>
+                    <div class="admin-stat-info">
+                        <span class="admin-stat-value">98.2%</span>
+                        <span class="admin-stat-label">Storage Used</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="admin-tabs animate fade-in-up">
+                <button class="admin-tab active" data-tab="users" onclick="switchAdminTab('users', this)">
+                    <i class="fas fa-users"></i> Users
+                </button>
+                <button class="admin-tab" data-tab="security" onclick="switchAdminTab('security', this)">
+                    <i class="fas fa-shield-alt"></i> Security
+                </button>
+                <button class="admin-tab" data-tab="logs" onclick="switchAdminTab('logs', this)">
+                    <i class="fas fa-clipboard-list"></i> Logs
+                </button>
+                <button class="admin-tab" data-tab="settings" onclick="switchAdminTab('settings', this)">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <button class="admin-tab" data-tab="backup" onclick="switchAdminTab('backup', this)">
+                    <i class="fas fa-cloud-upload-alt"></i> Backup
+                </button>
+            </div>
+
+            <!-- Tab Content: Users -->
+            <div class="admin-tab-content active" id="tab-users">
+                <div class="admin-card animate fade-in-up">
+                    <div class="admin-card-header">
+                        <h3><i class="fas fa-users"></i> User Management</h3>
+                        <div class="admin-card-actions">
+                            <input type="text" id="userSearchInput" placeholder="Search by name or email..." class="admin-search" oninput="filterUsers()">
+                            <button class="btn btn-primary btn-sm" onclick="openAddUserModal()"><i class="fas fa-plus"></i> Add User</button>
+                            <button class="btn btn-outline btn-sm" onclick="exportUsers()"><i class="fas fa-download"></i> Export</button>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="table-wrapper">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>User</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Last Login</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <tr><td colspan="7" class="text-center">Loading users...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-pagination" id="usersPagination"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Security -->
+            <div class="admin-tab-content" id="tab-security">
+                <div class="admin-grid-2col">
+                    <!-- Firewall Rules -->
+                    <div class="admin-card animate fade-in-up">
+                        <div class="admin-card-header">
+                            <h3><i class="fas fa-fire"></i> Firewall Rules</h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="form-group">
+                                <label>Block New IP Address</label>
+                                <div class="input-with-button">
+                                    <input type="text" id="blockIPInput" placeholder="e.g., 192.168.1.100" class="admin-input">
+                                    <button class="btn btn-red btn-sm" onclick="blockNewIP()"><i class="fas fa-ban"></i> Block</button>
+                                </div>
+                            </div>
+                            <div class="blocked-list" id="blockedIPList">
+                                <p class="text-muted">Loading blocked IPs...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Rate Limiting -->
+                    <div class="admin-card animate fade-in-up">
+                        <div class="admin-card-header">
+                            <h3><i class="fas fa-tachometer-alt"></i> Rate Limiting</h3>
+                        </div>
+                        <div class="admin-card-body">
+                            <div class="form-group">
+                                <label>Max Requests per Minute</label>
+                                <input type="number" id="rateLimitMax" value="100" class="admin-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Login Attempts Limit</label>
+                                <input type="number" id="loginLimitMax" value="5" class="admin-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Block Duration (minutes)</label>
+                                <input type="number" id="blockDuration" value="15" class="admin-input">
+                            </div>
+                            <button class="btn btn-primary" onclick="saveRateLimitSettings()"><i class="fas fa-save"></i> Save Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Logs -->
+            <div class="admin-tab-content" id="tab-logs">
+                <div class="admin-card animate fade-in-up">
+                    <div class="admin-card-header">
+                        <h3><i class="fas fa-history"></i> Audit Logs</h3>
+                        <div class="admin-card-actions">
+                            <select id="logFilter" class="admin-select" onchange="filterLogs()">
+                                <option value="all">All Events</option>
+                                <option value="login">Login</option>
+                                <option value="security">Security</option>
+                                <option value="admin">Admin</option>
+                                <option value="error">Error</option>
+                            </select>
+                            <button class="btn btn-outline btn-sm" onclick="refreshLogs()"><i class="fas fa-sync"></i> Refresh</button>
+                            <button class="btn btn-outline btn-sm" onclick="clearAllLogs()"><i class="fas fa-trash"></i> Clear</button>
+                        </div>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="log-container" id="auditLogContainer">
+                            <p class="text-muted">Loading audit logs...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Settings -->
+            <div class="admin-tab-content" id="tab-settings">
+                <div class="admin-card animate fade-in-up">
+                    <div class="admin-card-header">
+                        <h3><i class="fas fa-cog"></i> System Settings</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="settings-grid">
+                            <div class="setting-toggle">
+                                <div class="setting-info">
+                                    <strong>Firewall Protection</strong>
+                                    <p>Enable/disable the web application firewall</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="firewallToggle" checked onchange="toggleSystemSetting('firewall')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-toggle">
+                                <div class="setting-info">
+                                    <strong>Rate Limiting</strong>
+                                    <p>Enable/disable API rate limiting</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="rateLimitToggle" checked onchange="toggleSystemSetting('rateLimit')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-toggle">
+                                <div class="setting-info">
+                                    <strong>Audit Logging</strong>
+                                    <p>Enable/disable security audit logging</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="auditLogToggle" checked onchange="toggleSystemSetting('auditLog')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-toggle">
+                                <div class="setting-info">
+                                    <strong>Maintenance Mode</strong>
+                                    <p>Put site in maintenance mode</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="maintenanceToggle" onchange="toggleSystemSetting('maintenance')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-toggle">
+                                <div class="setting-info">
+                                    <strong>Auto-Block Attacks</strong>
+                                    <p>Automatically block detected attacks</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoBlockToggle" checked onchange="toggleSystemSetting('autoBlock')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveAllSettings()" style="margin-top:20px"><i class="fas fa-save"></i> Save All Settings</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Backup -->
+            <div class="admin-tab-content" id="tab-backup">
+                <div class="admin-card animate fade-in-up">
+                    <div class="admin-card-header">
+                        <h3><i class="fas fa-cloud-upload-alt"></i> Backup & Restore</h3>
+                    </div>
+                    <div class="admin-card-body">
+                        <div class="backup-actions">
+                            <button class="btn btn-primary btn-lg" onclick="createBackup()">
+                                <i class="fas fa-download"></i> Create Backup Now
+                            </button>
+                            <button class="btn btn-outline btn-lg" onclick="restoreBackup()">
+                                <i class="fas fa-upload"></i> Restore from Backup
+                            </button>
+                        </div>
+                        <div class="backup-history" style="margin-top:20px">
+                            <h4>Recent Backups</h4>
+                            <div id="backupList">
+                                <div class="backup-item">
+                                    <span><i class="fas fa-file-archive"></i> backup_2026_01_25.zip</span>
+                                    <span class="text-muted">125 MB • Jan 25, 2026</span>
+                                    <button class="btn btn-sm btn-outline"><i class="fas fa-download"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top:none;padding-top:0">
+                <p>&copy; 2026 SecureSite Admin Panel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Auth check
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof AuthGuard === 'undefined' || !AuthGuard.isAuthenticated()) {
+                window.location.href = '/login.html';
+                return;
+            }
+            initAdminPanel();
+        });
+
+        function initAdminPanel() {
+            updateAdminStats();
+            loadUsersTable();
+            loadBlockedIPs();
+            loadAuditLogs();
+            animateAdminCards();
+        }
+
+        function updateAdminStats() {
+            document.getElementById('statBlockedIPs').textContent = Firewall?.getStats()?.blockedIPs || 0;
+            document.getElementById('statThreatLevel').textContent = Security?.getStatus()?.threatLevel || 'Low';
+            document.getElementById('statUptime').textContent = Math.floor(performance.now() / 3600000) + 'h';
+        }
+
+        function loadUsersTable() {
+            const users = [
+                { id: 1, name: 'John Doe', email: 'john@example.com', role: 'admin', status: 'active', lastLogin: '2 min ago' },
+                { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'user', status: 'active', lastLogin: '1 hour ago' },
+                { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'user', status: 'blocked', lastLogin: '3 days ago' },
+                { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'moderator', status: 'active', lastLogin: '5 min ago' },
+                { id: 5, name: 'Charlie Davis', email: 'charlie@example.com', role: 'user', status: 'active', lastLogin: '1 day ago' }
+            ];
+            
+            document.getElementById('usersTableBody').innerHTML = users.map(u => `
+                <tr>
+                    <td>#${u.id}</td>
+                    <td><div class="user-cell"><img src="assets/favicon.ico" width="24" height="24" style="border-radius:50%"><span>${u.name}</span></div></td>
+                    <td>${u.email}</td>
+                    <td><span class="badge badge-blue">${u.role}</span></td>
+                    <td><span class="badge ${u.status==='active'?'badge-green':'badge-red'}">${u.status}</span></td>
+                    <td>${u.lastLogin}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="editUser(${u.id})" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline" onclick="toggleUserStatus(${u.id})" title="Toggle Status"><i class="fas fa-power-off"></i></button>
+                        <button class="btn btn-sm btn-red" onclick="deleteUser(${u.id})" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadBlockedIPs() {
+            const ips = Firewall?.blocked ? Array.from(Firewall.blocked) : ['192.168.1.100', '10.0.0.55', '45.33.32.156'];
+            document.getElementById('blockedIPList').innerHTML = ips.map(ip => `
+                <div class="blocked-ip-item">
+                    <span>🚫 ${ip}</span>
+                    <button class="btn btn-sm btn-outline" onclick="unblockIP('${ip}')">Unblock</button>
+                </div>
+            `).join('') || '<p class="text-muted">No IPs blocked.</p>';
+        }
+
+        function loadAuditLogs() {
+            const logs = Logger?.getLogs?.(20) || [];
+            document.getElementById('auditLogContainer').innerHTML = logs.length > 0 ? logs.map(l => `
+                <div class="log-entry"><span>${l.action}</span><span class="log-time">${new Date(l.timestamp).toLocaleTimeString()}</span></div>
+            `).join('') : '<p class="text-muted">No audit logs available.</p>';
+        }
+
+        function switchAdminTab(tabName, btn) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        function blockNewIP() {
+            const ip = document.getElementById('blockIPInput').value.trim();
+            if (ip && Firewall) { Firewall.blockIP(ip); document.getElementById('blockIPInput').value = ''; loadBlockedIPs(); updateAdminStats(); }
+        }
+        function unblockIP(ip) { if (Firewall) { Firewall.blocked.delete(ip); loadBlockedIPs(); updateAdminStats(); } }
+        function refreshLogs() { loadAuditLogs(); }
+        function clearAllLogs() { if (Logger) Logger.logs = []; loadAuditLogs(); }
+        function filterLogs() { loadAuditLogs(); }
+        function editUser(id) { alert('Edit user #' + id); }
+        function toggleUserStatus(id) { alert('Toggle status for user #' + id); }
+        function deleteUser(id) { if (confirm('Delete user #' + id + '?')) { loadUsersTable(); } }
+        function openAddUserModal() { alert('Add user form coming soon!'); }
+        function exportUsers() { alert('Exporting users...'); }
+        function saveRateLimitSettings() { alert('Rate limit settings saved!'); }
+        function toggleSystemSetting(s) { console.log('Toggled:', s); }
+        function saveAllSettings() { alert('All settings saved!'); }
+        function createBackup() { alert('Backup started!'); }
+        function restoreBackup() { alert('Select backup file to restore.'); }
+        function filterUsers() { loadUsersTable(); }
+        function animateAdminCards() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+        }
+        function toggleMobileMenu() {
+            const nav = document.getElementById('nav');
+            nav.classList.toggle('open');
+            document.getElementById('menuToggle').classList.toggle('active');
+        }
+        function handleLogout() {
+            if (typeof AuthGuard !== 'undefined') AuthGuard.logout();
+            window.location.href = '/';
+        }
+        setInterval(updateAdminStats, 5000);
+    </script>
+</body>
+</html>

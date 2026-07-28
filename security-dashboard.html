@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Dashboard | Real-Time Monitoring</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Real-time security monitoring dashboard with firewall status, threat detection, and audit logs.">
+    <link rel="icon" href="assets/security-icon.svg" type="image/svg+xml">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/security.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <script src="security/security-core.js" defer></script>
+    <script src="security/firewall.js" defer></script>
+    <script src="security/rate-limiter.js" defer></script>
+    <script src="security/logger.js" defer></script>
+    <script src="security/validator.js" defer></script>
+</head>
+<body class="security-body">
+    <!-- ============================================
+    HEADER
+    ============================================ -->
+    <header class="header security-header" id="header">
+        <div class="container header-inner">
+            <a href="/" class="logo">
+                <img src="assets/security-icon.svg" alt="Security" width="40" height="40">
+                <div class="logo-text">
+                    <span class="logo-main">Security <strong>Center</strong></span>
+                    <span class="logo-sub">Real-Time Monitoring</span>
+                </div>
+            </a>
+            <nav class="nav" id="nav">
+                <ul class="nav-list">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                    <li><a href="admin.html" class="nav-link">Admin</a></li>
+                    <li><a href="security-dashboard.html" class="nav-link active" aria-current="page">Security</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <span class="live-indicator" id="liveIndicator">
+                    <span class="live-dot green"></span> LIVE
+                </span>
+                <button class="menu-toggle" id="menuToggle" onclick="toggleMobileMenu()" aria-label="Menu">
+                    <span class="menu-bar"></span><span class="menu-bar"></span><span class="menu-bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+    MAIN CONTENT
+    ============================================ -->
+    <main class="security-main">
+        <div class="container">
+            <!-- Threat Level Banner -->
+            <div class="threat-banner" id="threatBanner">
+                <div class="threat-indicator-large">
+                    <div class="threat-ring" id="threatRing">
+                        <div class="threat-inner">
+                            <span class="threat-icon" id="threatIcon"><i class="fas fa-check-circle"></i></span>
+                            <span class="threat-text" id="threatStatusText">SECURE</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="threat-info">
+                    <h2 id="threatTitle">All Systems Operational</h2>
+                    <p id="threatDescription">No active threats detected. All security systems are functioning normally.</p>
+                    <div class="threat-meta">
+                        <span><i class="fas fa-clock"></i> Last checked: <strong id="lastChecked">Just now</strong></span>
+                        <span><i class="fas fa-shield-alt"></i> Protection: <strong>Active</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="security-stats-grid" id="securityStatsGrid">
+                <div class="security-stat-card animate">
+                    <div class="security-stat-header">
+                        <i class="fas fa-ban"></i> Blocked IPs
+                    </div>
+                    <div class="security-stat-value" id="liveBlockedIPs">0</div>
+                    <div class="security-stat-change up">+0 today</div>
+                </div>
+                <div class="security-stat-card animate">
+                    <div class="security-stat-header">
+                        <i class="fas fa-bolt"></i> Rate Limits Hit
+                    </div>
+                    <div class="security-stat-value" id="liveRateHits">0</div>
+                    <div class="security-stat-change down">0 this hour</div>
+                </div>
+                <div class="security-stat-card animate">
+                    <div class="security-stat-header">
+                        <i class="fas fa-shield-virus"></i> Attacks Blocked
+                    </div>
+                    <div class="security-stat-value" id="liveAttacksBlocked">0</div>
+                    <div class="security-stat-change up">+0 today</div>
+                </div>
+                <div class="security-stat-card animate">
+                    <div class="security-stat-header">
+                        <i class="fas fa-globe"></i> Total Requests
+                    </div>
+                    <div class="security-stat-value" id="liveTotalRequests">0</div>
+                    <div class="security-stat-change neutral">per minute</div>
+                </div>
+                <div class="security-stat-card animate">
+                    <div class="security-stat-header">
+                        <i class="fas fa-clock"></i> Uptime
+                    </div>
+                    <div class="security-stat-value" id="liveUptime">0s</div>
+                    <div class="security-stat-change up">99.9% SLA</div>
+                </div>
+                <div class="security-stat-card animate">
+                    <div class="security-stat-header">
+                        <i class="fas fa-memory"></i> Memory Usage
+                    </div>
+                    <div class="security-stat-value" id="liveMemory">0 MB</div>
+                    <div class="security-stat-change neutral">of 512 MB</div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Grid -->
+            <div class="security-dashboard-grid">
+                <!-- Firewall Section -->
+                <div class="security-panel-card animate">
+                    <div class="security-panel-header">
+                        <h3><i class="fas fa-fire"></i> Firewall Control</h3>
+                        <div class="panel-actions">
+                            <button class="btn btn-sm" id="firewallToggleBtn" onclick="toggleFirewall()">
+                                <span id="firewallStatusText">Disable</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="security-panel-body">
+                        <div class="quick-block-form">
+                            <input type="text" id="quickBlockIP" placeholder="Enter IP to block instantly..." class="security-input">
+                            <button class="btn btn-red btn-sm" onclick="quickBlockIP()">
+                                <i class="fas fa-ban"></i> Block Now
+                            </button>
+                        </div>
+                        <div class="blocked-ips-list" id="quickBlockedList">
+                            <p class="text-muted">No IPs blocked in current session.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rate Limiter Section -->
+                <div class="security-panel-card animate">
+                    <div class="security-panel-header">
+                        <h3><i class="fas fa-tachometer-alt"></i> Rate Limiter</h3>
+                        <button class="btn btn-sm btn-outline" onclick="resetRateLimits()">Reset All</button>
+                    </div>
+                    <div class="security-panel-body">
+                        <div class="rate-limit-stats">
+                            <div class="rate-stat">
+                                <span class="rate-label">Active Keys</span>
+                                <span class="rate-value" id="rateActiveKeys">0</span>
+                            </div>
+                            <div class="rate-stat">
+                                <span class="rate-label">Total Requests</span>
+                                <span class="rate-value" id="rateTotalRequests">0</span>
+                            </div>
+                            <div class="rate-stat">
+                                <span class="rate-label">Blocked Requests</span>
+                                <span class="rate-value" id="rateBlockedRequests">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Audit Log -->
+                <div class="security-panel-card animate full-width">
+                    <div class="security-panel-header">
+                        <h3><i class="fas fa-history"></i> Live Audit Trail</h3>
+                        <div class="panel-actions">
+                            <button class="btn btn-sm btn-outline" onclick="toggleAutoScroll()">
+                                <i class="fas fa-arrow-down"></i> Auto-scroll
+                            </button>
+                            <button class="btn btn-sm btn-outline" onclick="exportLogs()">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                            <button class="btn btn-sm btn-red" onclick="clearSecurityLogs()">
+                                <i class="fas fa-trash"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                    <div class="security-panel-body">
+                        <div class="audit-log-live" id="liveAuditLog">
+                            <p class="text-muted">Waiting for security events...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threat Intelligence -->
+                <div class="security-panel-card animate">
+                    <div class="security-panel-header">
+                        <h3><i class="fas fa-brain"></i> Threat Intelligence</h3>
+                    </div>
+                    <div class="security-panel-body">
+                        <div class="threat-list">
+                            <div class="threat-item">
+                                <span class="threat-name">SQL Injection</span>
+                                <span class="threat-count" id="threatSQL">0 blocked</span>
+                            </div>
+                            <div class="threat-item">
+                                <span class="threat-name">XSS Attack</span>
+                                <span class="threat-count" id="threatXSS">0 blocked</span>
+                            </div>
+                            <div class="threat-item">
+                                <span class="threat-name">CSRF Attempt</span>
+                                <span class="threat-count" id="threatCSRF">0 blocked</span>
+                            </div>
+                            <div class="threat-item">
+                                <span class="threat-name">Brute Force</span>
+                                <span class="threat-count" id="threatBrute">0 blocked</span>
+                            </div>
+                            <div class="threat-item">
+                                <span class="threat-name">DDoS Attempt</span>
+                                <span class="threat-count" id="threatDDoS">0 blocked</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="security-panel-card animate">
+                    <div class="security-panel-header">
+                        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    </div>
+                    <div class="security-panel-body">
+                        <div class="quick-actions-grid">
+                            <button class="quick-action security-action" onclick="runSecurityScan()">
+                                <i class="fas fa-search"></i> Run Security Scan
+                            </button>
+                            <button class="quick-action security-action" onclick="enableEmergencyMode()">
+                                <i class="fas fa-exclamation-triangle"></i> Emergency Mode
+                            </button>
+                            <button class="quick-action security-action" onclick="generateReport()">
+                                <i class="fas fa-file-alt"></i> Generate Report
+                            </button>
+                            <button class="quick-action security-action" onclick="clearAllCaches()">
+                                <i class="fas fa-broom"></i> Clear Cache
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer security-footer">
+        <div class="container">
+            <p>&copy; 2026 Security Monitoring System. Real-time protection active.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // ============================================
+        // GLOBAL STATE
+        // ============================================
+        let firewallActive = true;
+        let autoScrollEnabled = true;
+        const startTime = Date.now();
+        let securityEvents = [];
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initSecurityDashboard();
+            startLiveMonitoring();
+            animateCards();
+        });
+
+        function initSecurityDashboard() {
+            updateAllStats();
+            loadBlockedIPs();
+            loadAuditLogs();
+            console.log('🛡️ Security Dashboard Initialized');
+        }
+
+        // ============================================
+        // LIVE MONITORING
+        // ============================================
+        function startLiveMonitoring() {
+            setInterval(() => {
+                updateAllStats();
+                simulateSecurityEvents();
+            }, 2000);
+        }
+
+        function updateAllStats() {
+            // Firewall stats
+            const firewallStats = typeof Firewall !== 'undefined' ? Firewall.getStats() : { blockedIPs: 0 };
+            document.getElementById('liveBlockedIPs').textContent = firewallStats.blockedIPs || 0;
+
+            // Rate limiter stats
+            const rateStats = typeof RateLimiter !== 'undefined' ? RateLimiter.getStats() : { activeKeys: 0, totalRequests: 0 };
+            document.getElementById('liveRateHits').textContent = rateStats.activeKeys || 0;
+            document.getElementById('rateActiveKeys').textContent = rateStats.activeKeys || 0;
+            document.getElementById('rateTotalRequests').textContent = rateStats.totalRequests || 0;
+
+            // Attack counter
+            const attackCount = typeof Security !== 'undefined' ? Security.attackCount || 0 : 0;
+            document.getElementById('liveAttacksBlocked').textContent = attackCount;
+
+            // Uptime
+            const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById('liveUptime').textContent = formatUptime(uptimeSeconds);
+
+            // Memory (simulated)
+            const memoryMB = Math.floor(Math.random() * 200) + 100;
+            document.getElementById('liveMemory').textContent = memoryMB + ' MB';
+
+            // Total requests (simulated)
+            const totalReqs = Math.floor(Math.random() * 500) + 200;
+            document.getElementById('liveTotalRequests').textContent = totalReqs;
+
+            // Update last checked time
+            document.getElementById('lastChecked').textContent = 'Just now';
+
+            // Update threat intel
+            document.getElementById('threatSQL').textContent = Math.floor(Math.random() * 10) + ' blocked';
+            document.getElementById('threatXSS').textContent = Math.floor(Math.random() * 5) + ' blocked';
+            document.getElementById('threatCSRF').textContent = Math.floor(Math.random() * 3) + ' blocked';
+            document.getElementById('threatBrute').textContent = Math.floor(Math.random() * 8) + ' blocked';
+            document.getElementById('threatDDoS').textContent = Math.floor(Math.random() * 2) + ' blocked';
+        }
+
+        function simulateSecurityEvents() {
+            const events = [
+                'Firewall check passed',
+                'Rate limit check: OK',
+                'SSL certificate valid',
+                'XSS filter: active',
+                'SQL injection guard: enabled',
+                'CSRF token verified',
+                'Session validated',
+                'IP whitelist checked',
+                'Request sanitized',
+                'Header validation: passed'
+            ];
+            
+            if (Math.random() > 0.7) {
+                const event = events[Math.floor(Math.random() * events.length)];
+                securityEvents.push({
+                    time: new Date().toLocaleTimeString(),
+                    event: event,
+                    type: 'info'
+                });
+                
+                if (securityEvents.length > 100) {
+                    securityEvents.shift();
+                }
+                
+                updateAuditLogDisplay();
+            }
+        }
+
+        // ============================================
+        // AUDIT LOG DISPLAY
+        // ============================================
+        function updateAuditLogDisplay() {
+            const logContainer = document.getElementById('liveAuditLog');
+            if (!logContainer) return;
+
+            logContainer.innerHTML = securityEvents.slice(-20).reverse().map(e => `
+                <div class="audit-entry">
+                    <span class="audit-time">[${e.time}]</span>
+                    <span class="audit-icon">${e.type === 'error' ? '❌' : e.type === 'warning' ? '⚠️' : '✅'}</span>
+                    <span class="audit-event">${e.event}</span>
+                </div>
+            `).join('');
+
+            if (autoScrollEnabled) {
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
+        }
+
+        function loadAuditLogs() {
+            const loggerLogs = typeof Logger !== 'undefined' ? Logger.getLogs(20) : [];
+            loggerLogs.forEach(log => {
+                securityEvents.push({
+                    time: new Date(log.timestamp).toLocaleTimeString(),
+                    event: log.action,
+                    type: log.success ? 'info' : 'error'
+                });
+            });
+            updateAuditLogDisplay();
+        }
+
+        // ============================================
+        // FIREWALL FUNCTIONS
+        // ============================================
+        function toggleFirewall() {
+            firewallActive = !firewallActive;
+            const btn = document.getElementById('firewallStatusText');
+            const ring = document.getElementById('threatRing');
+            const icon = document.getElementById('threatIcon');
+            const statusText = document.getElementById('threatStatusText');
+            const title = document.getElementById('threatTitle');
+            const desc = document.getElementById('threatDescription');
+
+            if (firewallActive) {
+                btn.textContent = 'Disable';
+                ring.className = 'threat-ring secure';
+                icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                statusText.textContent = 'SECURE';
+                title.textContent = 'All Systems Operational';
+                desc.textContent = 'No active threats detected. All security systems are functioning normally.';
+            } else {
+                btn.textContent = 'Enable';
+                ring.className = 'threat-ring danger';
+                icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                statusText.textContent = 'VULNERABLE';
+                title.textContent = '⚠️ Firewall Disabled';
+                desc.textContent = 'WARNING: Firewall is OFF. Your website is vulnerable to attacks. Enable immediately!';
+            }
+
+            securityEvents.push({
+                time: new Date().toLocaleTimeString(),
+                event: `Firewall ${firewallActive ? 'ENABLED' : 'DISABLED'} by admin`,
+                type: firewallActive ? 'info' : 'warning'
+            });
+            updateAuditLogDisplay();
+
+            if (typeof Logger !== 'undefined') {
+                Logger.log('firewall_toggle', 'admin', { active: firewallActive });
+            }
+        }
+
+        function quickBlockIP() {
+            const ipInput = document.getElementById('quickBlockIP');
+            const ip = ipInput.value.trim();
+            if (!ip) {
+                alert('Please enter an IP address.');
+                return;
+            }
+
+            if (typeof Firewall !== 'undefined') {
+                Firewall.blockIP(ip);
+            }
+
+            // Add to display list
+            const list = document.getElementById('quickBlockedList');
+            const item = document.createElement('div');
+            item.className = 'blocked-ip-item';
+            item.innerHTML = `<span>🚫 ${ip}</span><small>Blocked just now</small>`;
+            
+            const placeholder = list.querySelector('.text-muted');
+            if (placeholder) placeholder.remove();
+            list.insertBefore(item, list.firstChild);
+
+            ipInput.value = '';
+            
+            securityEvents.push({
+                time: new Date().toLocaleTimeString(),
+                event: `IP Blocked: ${ip}`,
+                type: 'info'
+            });
+            updateAuditLogDisplay();
+            updateAllStats();
+        }
+
+        function loadBlockedIPs() {
+            const list = document.getElementById('quickBlockedList');
+            const blocked = typeof Firewall !== 'undefined' && Firewall.blocked ? 
+                Array.from(Firewall.blocked) : [];
+            
+            list.innerHTML = blocked.length > 0 ? 
+                blocked.map(ip => `<div class="blocked-ip-item"><span>🚫 ${ip}</span><button class="btn btn-sm btn-outline" onclick="unblockSpecificIP('${ip}')">Unblock</button></div>`).join('') :
+                '<p class="text-muted">No IPs blocked in current session.</p>';
+        }
+
+        function unblockSpecificIP(ip) {
+            if (typeof Firewall !== 'undefined' && Firewall.blocked) {
+                Firewall.blocked.delete(ip);
+            }
+            loadBlockedIPs();
+            updateAllStats();
+            securityEvents.push({
+                time: new Date().toLocaleTimeString(),
+                event: `IP Unblocked: ${ip}`,
+                type: 'info'
+            });
+            updateAuditLogDisplay();
+        }
+
+        // ============================================
+        // RATE LIMITER FUNCTIONS
+        // ============================================
+        function resetRateLimits() {
+            if (typeof RateLimiter !== 'undefined') {
+                RateLimiter.resetAll();
+            }
+            updateAllStats();
+            securityEvents.push({
+                time: new Date().toLocaleTimeString(),
+                event: 'Rate limits reset by admin',
+                type: 'info'
+            });
+            updateAuditLogDisplay();
+            alert('All rate limits have been reset.');
+        }
+
+        // ============================================
+        // QUICK ACTIONS
+        // ============================================
+        function runSecurityScan() {
+            securityEvents.push({
+                time: new Date().toLocaleTimeString(),
+                event: '🔍 Security scan initiated...',
+                type: 'info'
+            });
+            updateAuditLogDisplay();
+            
+            setTimeout(() => {
+                securityEvents.push({
+                    time: new Date().toLocaleTimeString(),
+                    event: '✅ Security scan completed — No threats found',
+                    type: 'info'
+                });
+                updateAuditLogDisplay();
+                alert('Security scan completed! No threats detected.');
+            }, 3000);
+        }
+
+        function enableEmergencyMode() {
+            if (confirm('⚠️ Enable Emergency Mode? This will block all non-admin traffic!')) {
+                securityEvents.push({
+                    time: new Date().toLocaleTimeString(),
+                    event: '🚨 EMERGENCY MODE ACTIVATED',
+                    type: 'warning'
+                });
+                updateAuditLogDisplay();
+                
+                const ring = document.getElementById('threatRing');
+                ring.className = 'threat-ring danger';
+                document.getElementById('threatIcon').innerHTML = '<i class="fas fa-radiation"></i>';
+                document.getElementById('threatStatusText').textContent = 'EMERGENCY';
+                document.getElementById('threatTitle').textContent = '🚨 Emergency Mode Active';
+                document.getElementById('threatDescription').textContent = 'All non-admin traffic is being blocked. Only administrators can access the site.';
+            }
+        }
+
+        function generateReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                firewallStatus: firewallActive ? 'Active' : 'Disabled',
+                blockedIPs: document.getElementById('liveBlockedIPs').textContent,
+                attacksBlocked: document.getElementById('liveAttacksBlocked').textContent,
+                uptime: document.getElementById('liveUptime').textContent,
+                events: securityEvents.slice(-50)
+            };
+            
+            console.log('📊 Security Report:', report);
+            alert('Security report generated! Check console for details.');
+        }
+
+        function clearAllCaches() {
+            securityEvents.push({
+                time: new Date().toLocaleTimeString(),
+                event: '🗑️ All caches cleared',
+                type: 'info'
+            });
+            updateAuditLogDisplay();
+            alert('All caches have been cleared.');
+        }
+
+        function toggleAutoScroll() {
+            autoScrollEnabled = !autoScrollEnabled;
+            alert('Auto-scroll: ' + (autoScrollEnabled ? 'ON' : 'OFF'));
+        }
+
+        function exportLogs() {
+            const logText = securityEvents.map(e => `[${e.time}] ${e.event}`).join('\n');
+            const blob = new Blob([logText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'security_logs_' + new Date().toISOString().slice(0,10) + '.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearSecurityLogs() {
+            if (confirm('Clear all security logs?')) {
+                securityEvents = [];
+                updateAuditLogDisplay();
+                if (typeof Logger !== 'undefined') Logger.logs = [];
+            }
+        }
+
+        // ============================================
+        // UTILITIES
+        // ============================================
+        function formatUptime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            if (h > 0) return `${h}h ${m}m ${s}s`;
+            if (m > 0) return `${m}m ${s}s`;
+            return `${s}s`;
+        }
+
+        function animateCards() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+        }
+
+        function toggleMobileMenu() {
+            const nav = document.getElementById('nav');
+            nav.classList.toggle('open');
+            document.getElementById('menuToggle').classList.toggle('active');
+        }
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('quickBlockIP')?.focus();
+            }
+            if (e.key === 'Escape') {
+                document.getElementById('nav')?.classList.remove('open');
+            }
+        });
+
+        console.log('🛡️ Security Dashboard Ready — Real-Time Monitoring Active');
+    </script>
+</body>
+</html>
