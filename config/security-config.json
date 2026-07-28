@@ -1,0 +1,267 @@
+{
+  "version": "2.0.0",
+  "lastUpdated": "2026-01-28",
+  "environment": "production",
+  
+  "firewall": {
+    "enabled": true,
+    "mode": "strict",
+    "logLevel": "warn",
+    "banDuration": 3600000,
+    "attackThreshold": 50,
+    "maxRequestSize": 10485760,
+    "trustedProxies": [
+      "127.0.0.1",
+      "::1"
+    ],
+    "blockedUserAgents": [
+      "sqlmap",
+      "nikto",
+      "nmap",
+      "nessus",
+      "openvas",
+      "acunetix",
+      "netsparker",
+      "burp",
+      "zap",
+      "w3af",
+      "metasploit",
+      "hydra",
+      "medusa",
+      "dirbuster",
+      "gobuster"
+    ],
+    "allowedSearchEngines": [
+      "googlebot",
+      "bingbot",
+      "duckduckbot",
+      "yandexbot",
+      "slurp",
+      "baiduspider",
+      "applebot"
+    ],
+    "blockedPaths": [
+      "/wp-admin",
+      "/wp-login",
+      "/phpmyadmin",
+      "/adminer",
+      "/.env",
+      "/.git",
+      "/config",
+      "/backup",
+      "/sql",
+      "/db",
+      "/dump",
+      "/shell",
+      "/cmd",
+      "/exec"
+    ]
+  },
+  
+  "rateLimit": {
+    "enabled": true,
+    "defaultLimit": 100,
+    "defaultWindow": 60000,
+    "blockDuration": 900000,
+    "endpoints": {
+      "login": {
+        "max": 5,
+        "window": 300000,
+        "block": 900000
+      },
+      "api": {
+        "max": 60,
+        "window": 60000,
+        "block": 300000
+      },
+      "search": {
+        "max": 30,
+        "window": 60000,
+        "block": 120000
+      },
+      "upload": {
+        "max": 10,
+        "window": 300000,
+        "block": 600000
+      },
+      "passwordReset": {
+        "max": 3,
+        "window": 3600000,
+        "block": 7200000
+      },
+      "contact": {
+        "max": 5,
+        "window": 3600000,
+        "block": 3600000
+      }
+    }
+  },
+  
+  "authentication": {
+    "sessionTimeout": 3600000,
+    "maxLoginAttempts": 5,
+    "lockoutDuration": 900000,
+    "passwordMinLength": 8,
+    "passwordMaxLength": 128,
+    "requireMFA": false,
+    "requireEmailVerification": true,
+    "allowRememberMe": true,
+    "rememberMeDays": 30,
+    "allowedRoles": [
+      "user",
+      "moderator",
+      "admin",
+      "superadmin"
+    ],
+    "tokenConfig": {
+      "accessTokenExpiry": 3600,
+      "refreshTokenExpiry": 604800,
+      "issuer": "secure-website",
+      "algorithm": "HS256"
+    }
+  },
+  
+  "encryption": {
+    "algorithm": "AES-GCM",
+    "keyLength": 256,
+    "hashAlgorithm": "SHA-256",
+    "iterations": 100000,
+    "saltLength": 16,
+    "ivLength": 12
+  },
+  
+  "headers": {
+    "xContentTypeOptions": "nosniff",
+    "xFrameOptions": "DENY",
+    "xXssProtection": "1; mode=block",
+    "referrerPolicy": "strict-origin-when-cross-origin",
+    "strictTransportSecurity": "max-age=31536000; includeSubDomains; preload",
+    "contentSecurityPolicy": {
+      "defaultSrc": ["'self'"],
+      "scriptSrc": ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://www.gstatic.com"],
+      "styleSrc": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+      "fontSrc": ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+      "imgSrc": ["'self'", "data:", "https:", "blob:"],
+      "connectSrc": ["'self'", "https:", "wss:"],
+      "frameSrc": ["'none'"],
+      "objectSrc": ["'none'"],
+      "baseUri": ["'self'"],
+      "formAction": ["'self'"]
+    },
+    "permissionsPolicy": {
+      "camera": [],
+      "microphone": [],
+      "geolocation": [],
+      "payment": [],
+      "usb": [],
+      "vr": [],
+      "accelerometer": [],
+      "gyroscope": [],
+      "magnetometer": []
+    }
+  },
+  
+  "cors": {
+    "enabled": true,
+    "allowedOrigins": [
+      "https://secure-website.vercel.app",
+      "https://www.securesite.com",
+      "https://securesite.com"
+    ],
+    "developmentOrigins": [
+      "http://localhost:3000",
+      "http://localhost:5000",
+      "http://127.0.0.1:3000"
+    ],
+    "allowedMethods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    "allowedHeaders": [
+      "Content-Type",
+      "Authorization",
+      "X-CSRF-Token",
+      "X-Requested-With",
+      "X-Request-ID"
+    ],
+    "exposedHeaders": [
+      "X-Request-ID",
+      "X-Response-Time",
+      "X-RateLimit-Limit",
+      "X-RateLimit-Remaining"
+    ],
+    "maxAge": 86400,
+    "allowCredentials": true
+  },
+  
+  "audit": {
+    "enabled": true,
+    "logLevel": "info",
+    "maxLogSize": 1000,
+    "retentionDays": 90,
+    "includeIP": true,
+    "includeUserAgent": true,
+    "categories": [
+      "authentication",
+      "authorization",
+      "security",
+      "api",
+      "admin",
+      "user",
+      "system",
+      "error"
+    ]
+  },
+  
+  "monitoring": {
+    "enabled": true,
+    "healthCheckInterval": 300,
+    "threatMonitoring": true,
+    "performanceMonitoring": true,
+    "errorReporting": false,
+    "alertThresholds": {
+      "errorRate": 5,
+      "responseTime": 2000,
+      "memoryUsage": 90,
+      "cpuUsage": 80
+    }
+  },
+  
+  "backup": {
+    "enabled": true,
+    "frequency": "daily",
+    "retentionDays": 30,
+    "includeDatabase": true,
+    "includeFiles": true,
+    "notifyOnFailure": true
+  },
+  
+  "maintenance": {
+    "enabled": false,
+    "allowedIPs": [
+      "127.0.0.1"
+    ],
+    "allowedEmails": [
+      "admin@securesite.com"
+    ],
+    "message": "We are currently performing maintenance. Please check back soon."
+  },
+  
+  "notifications": {
+    "email": {
+      "enabled": true,
+      "fromAddress": "security@securesite.com",
+      "fromName": "Secure Website Security"
+    },
+    "slack": {
+      "enabled": false,
+      "webhook": ""
+    },
+    "discord": {
+      "enabled": false,
+      "webhook": ""
+    },
+    "telegram": {
+      "enabled": false,
+      "botToken": "",
+      "chatId": ""
+    }
+  }
+}

@@ -1,0 +1,350 @@
+{
+  "version": "2.0.0",
+  "lastUpdated": "2026-01-28",
+  "description": "Web Application Firewall Rules Configuration",
+  
+  "global": {
+    "enabled": true,
+    "mode": "production",
+    "defaultAction": "allow",
+    "logLevel": "warn"
+  },
+  
+  "ipRules": {
+    "whitelist": [
+      "127.0.0.1",
+      "::1",
+      "localhost"
+    ],
+    "blacklist": [
+      "45.33.32.156",
+      "103.224.182.250",
+      "185.220.101.34"
+    ],
+    "dynamicBlocking": {
+      "enabled": true,
+      "threshold": 5,
+      "windowSeconds": 300,
+      "blockDurationSeconds": 3600,
+      "maxBlockedIPs": 1000
+    }
+  },
+  
+  "userAgentRules": {
+    "blockEmpty": true,
+    "blockShort": true,
+    "minLength": 10,
+    "blocked": [
+      "sqlmap/",
+      "nikto/",
+      "nmap",
+      "nessus",
+      "openvas",
+      "acunetix",
+      "netsparker",
+      "burpsuite",
+      "zap/",
+      "w3af",
+      "metasploit",
+      "hydra",
+      "medusa",
+      "dirbuster",
+      "gobuster",
+      "nikto",
+      "whatweb",
+      "wpscan",
+      "joomscan",
+      "drupscan",
+      "masscan",
+      "zgrab",
+      "zgrab2",
+      "zgrab3"
+    ],
+    "allowedBots": [
+      "googlebot",
+      "bingbot",
+      "duckduckbot",
+      "yandexbot",
+      "slurp",
+      "baiduspider",
+      "applebot",
+      "facebookexternalhit",
+      "twitterbot",
+      "linkedinbot",
+      "slackbot",
+      "discordbot",
+      "whatsapp"
+    ]
+  },
+  
+  "requestRules": {
+    "maxURLLength": 2048,
+    "maxQueryLength": 1024,
+    "maxBodySize": 10485760,
+    "maxHeaderSize": 8192,
+    "maxHeaders": 50,
+    "allowedMethods": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "PATCH",
+      "OPTIONS",
+      "HEAD"
+    ],
+    "blockedMethods": [
+      "TRACE",
+      "TRACK",
+      "CONNECT"
+    ],
+    "requiredHeaders": [
+      "Host",
+      "User-Agent"
+    ]
+  },
+  
+  "urlRules": {
+    "blockedPaths": [
+      "/wp-admin",
+      "/wp-login",
+      "/wp-content",
+      "/wp-includes",
+      "/phpmyadmin",
+      "/phpMyAdmin",
+      "/adminer",
+      "/mysql",
+      "/sql",
+      "/db",
+      "/database",
+      "/backup",
+      "/backups",
+      "/dump",
+      "/export",
+      "/import",
+      "/shell",
+      "/cmd",
+      "/exec",
+      "/console",
+      "/terminal",
+      "/.env",
+      "/.git",
+      "/.svn",
+      "/.hg",
+      "/.DS_Store",
+      "/config",
+      "/configuration",
+      "/settings",
+      "/setup",
+      "/install",
+      "/admin/config",
+      "/administrator",
+      "/cpanel",
+      "/webmail",
+      "/owa",
+      "/ecp",
+      "/actuator",
+      "/swagger",
+      "/api-docs",
+      "/graphql",
+      "/debug",
+      "/test",
+      "/demo"
+    ],
+    "blockedExtensions": [
+      ".php",
+      ".asp",
+      ".aspx",
+      ".jsp",
+      ".jspx",
+      ".do",
+      ".action",
+      ".cgi",
+      ".pl",
+      ".py",
+      ".rb",
+      ".sh",
+      ".bash",
+      ".bat",
+      ".cmd",
+      ".exe",
+      ".dll",
+      ".so",
+      ".war",
+      ".ear",
+      ".jar",
+      ".class",
+      ".sql",
+      ".db",
+      ".sqlite",
+      ".mdb",
+      ".bak",
+      ".backup",
+      ".old",
+      ".orig",
+      ".save",
+      ".swp",
+      ".swo",
+      ".tmp",
+      ".temp",
+      ".log",
+      ".env",
+      ".ini",
+      ".conf",
+      ".config",
+      ".yml",
+      ".yaml",
+      ".json"
+    ]
+  },
+  
+  "sqlInjectionRules": {
+    "enabled": true,
+    "patterns": [
+      "(?i)(\\bunion\\b.*\\bselect\\b)",
+      "(?i)(\\binsert\\b.*\\binto\\b)",
+      "(?i)(\\bdrop\\b.*\\btable\\b)",
+      "(?i)(\\bdelete\\b.*\\bfrom\\b)",
+      "(?i)(\\bupdate\\b.*\\bset\\b)",
+      "(?i)(\\bexec\\b.*\\()",
+      "(?i)(\\bexecute\\b.*\\()",
+      "(?i)(\\btruncate\\b.*\\btable\\b)",
+      "(?i)(\\balter\\b.*\\btable\\b)",
+      "(?i)(\\bcreate\\b.*\\btable\\b)",
+      "(?i)(';\\s*--)",
+      "(?i)(\".*\\s*--)",
+      "(?i)(\\bor\\b.*=.*\\d)",
+      "(?i)(\\band\\b.*=.*\\d)",
+      "(?i)(\\bwaitfor\\b.*\\bdelay\\b)",
+      "(?i)(\\bbenchmark\\b.*\\()",
+      "(?i)(\\bsleep\\b.*\\()",
+      "(?i)(@@version)",
+      "(?i)(information_schema)",
+      "(?i)(\\bdeclare\\b.*@)",
+      "(?i)(\\bcast\\b.*\\()",
+      "(?i)(\\bconvert\\b.*\\()"
+    ],
+    "action": "block",
+    "statusCode": 403,
+    "message": "SQL injection attempt blocked"
+  },
+  
+  "xssRules": {
+    "enabled": true,
+    "patterns": [
+      "(?i)(<script\\b[^>]*>)",
+      "(?i)(javascript\\s*:)",
+      "(?i)(on\\w+\\s*=\\s*[\"']?[^\"'>]*[\"']?)",
+      "(?i)(<iframe\\b[^>]*>)",
+      "(?i)(<embed\\b[^>]*>)",
+      "(?i)(<object\\b[^>]*>)",
+      "(?i)(<link\\b[^>]*>)",
+      "(?i)(expression\\s*\\()",
+      "(?i)(eval\\s*\\()",
+      "(?i)(document\\.cookie)",
+      "(?i)(document\\.write)",
+      "(?i)(window\\.location)",
+      "(?i)(fromCharCode)",
+      "(?i)(String\\.fromCharCode)",
+      "(?i)(atob\\s*\\()",
+      "(?i)(btoa\\s*\\()",
+      "(?i)(alert\\s*\\()",
+      "(?i)(prompt\\s*\\()",
+      "(?i)(confirm\\s*\\()",
+      "(?i)(<svg\\b[^>]*>)",
+      "(?i)(<math\\b[^>]*>)"
+    ],
+    "action": "block",
+    "statusCode": 403,
+    "message": "XSS attack blocked"
+  },
+  
+  "pathTraversalRules": {
+    "enabled": true,
+    "patterns": [
+      "\\.\\./",
+      "\\.\\.\\\\",
+      "%2e%2e%2f",
+      "%2e%2e/",
+      "..%2f",
+      "%2e%2e%5c",
+      "..%5c",
+      "/etc/passwd",
+      "/etc/shadow",
+      "/etc/hosts",
+      "/proc/self/",
+      "/windows/",
+      "boot\\.ini",
+      "win\\.ini",
+      "\\\\windows\\\\",
+      "C:\\\\",
+      "D:\\\\"
+    ],
+    "action": "block",
+    "statusCode": 403,
+    "message": "Path traversal blocked"
+  },
+  
+  "csrfRules": {
+    "enabled": true,
+    "protectedMethods": ["POST", "PUT", "DELETE", "PATCH"],
+    "tokenHeader": "X-CSRF-Token",
+    "tokenCookie": "csrf_token",
+    "tokenExpiry": 3600
+  },
+  
+  "rateLimitRules": {
+    "enabled": true,
+    "globalLimit": 1000,
+    "globalWindow": 60,
+    "perIPLimit": 100,
+    "perIPWindow": 60,
+    "blockDuration": 900,
+    "whitelistedIPs": [],
+    "endpoints": {
+      "/api/login": { "limit": 5, "window": 300 },
+      "/api/register": { "limit": 3, "window": 3600 },
+      "/api/password-reset": { "limit": 3, "window": 3600 },
+      "/api/search": { "limit": 30, "window": 60 },
+      "/api/upload": { "limit": 10, "window": 300 }
+    }
+  },
+  
+  "geoRules": {
+    "enabled": false,
+    "blockedCountries": [],
+    "allowedCountries": [],
+    "mode": "blacklist"
+  },
+  
+  "responseRules": {
+    "removeServerHeader": true,
+    "removePoweredByHeader": true,
+    "addSecurityHeaders": true,
+    "minifyHTML": false,
+    "compressResponse": true
+  },
+  
+  "customRules": [
+    {
+      "name": "Block WordPress attacks",
+      "enabled": true,
+      "pattern": "(?i)(wp-admin|wp-login|wp-content|wp-includes|xmlrpc\\.php)",
+      "action": "block",
+      "priority": 1
+    },
+    {
+      "name": "Block PHP file access",
+      "enabled": true,
+      "pattern": "\\.php$",
+      "action": "block",
+      "priority": 2
+    },
+    {
+      "name": "Block excessive query params",
+      "enabled": true,
+      "condition": "query_param_count > 20",
+      "action": "block",
+      "priority": 3
+    }
+  ]
+}
