@@ -1,0 +1,679 @@
+/* ============================================
+   SECURE WEBSITE — Security UI Theme v2.0
+   Dark Theme for Security Dashboards
+   ============================================ */
+
+/* --------------------------------------------------
+   SECURITY BODY (Dark Theme)
+   -------------------------------------------------- */
+.security-body {
+    background: #0a0e17;
+    color: #e2e8f0;
+}
+
+.security-body .header {
+    background: rgba(10, 14, 23, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.security-body .logo-main { color: #e2e8f0; }
+.security-body .nav-link { color: #94a3b8; }
+.security-body .nav-link:hover { background: rgba(255, 255, 255, 0.04); color: #fff; }
+.security-body .nav-link.active { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+
+.security-body .footer {
+    background: #060a10;
+}
+
+/* --------------------------------------------------
+   SECURITY HEADER
+   -------------------------------------------------- */
+.security-header {
+    background: rgba(10, 14, 23, 0.95) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 600;
+    color: #10b981;
+    letter-spacing: 1px;
+}
+
+.live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: livePulse 2s ease-in-out infinite;
+}
+
+.live-dot.green {
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.live-dot.red {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* --------------------------------------------------
+   THREAT BANNER
+   -------------------------------------------------- */
+.threat-banner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+}
+
+.threat-indicator-large {
+    flex-shrink: 0;
+}
+
+.threat-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid;
+    animation: ringPulse 2s ease-in-out infinite;
+}
+
+.threat-ring.secure {
+    border-color: rgba(16, 185, 129, 0.4);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.threat-ring.warning {
+    border-color: rgba(245, 158, 11, 0.4);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.threat-ring.danger {
+    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+@keyframes ringPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.2); }
+    50% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+}
+
+.threat-inner {
+    text-align: center;
+}
+
+.threat-icon {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.threat-icon .fa-check-circle { color: #10b981; }
+.threat-icon .fa-exclamation-triangle { color: #f59e0b; }
+.threat-icon .fa-radiation { color: #ef4444; animation: spin 2s linear infinite; }
+
+.threat-text {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.threat-info h2 {
+    color: #e2e8f0;
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.threat-info p {
+    color: #94a3b8;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.threat-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+.threat-meta i {
+    margin-right: 4px;
+    color: #10b981;
+}
+
+/* --------------------------------------------------
+   SECURITY STATS GRID
+   -------------------------------------------------- */
+.security-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.security-stat-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: var(--transition);
+}
+
+.security-stat-card:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    background: rgba(59, 130, 246, 0.03);
+}
+
+.security-stat-header {
+    font-size: 11px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.security-stat-header i {
+    color: #3b82f6;
+}
+
+.security-stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e2e8f0;
+    font-family: var(--font-mono);
+}
+
+.security-stat-change {
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+.security-stat-change.up { color: #10b981; }
+.security-stat-change.down { color: #ef4444; }
+.security-stat-change.neutral { color: #64748b; }
+
+/* --------------------------------------------------
+   SECURITY DASHBOARD GRID
+   -------------------------------------------------- */
+.security-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.security-dashboard-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+/* --------------------------------------------------
+   SECURITY PANEL CARDS
+   -------------------------------------------------- */
+.security-panel-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.security-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.security-panel-header h3 {
+    color: #e2e8f0;
+    font-size: 14px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.security-panel-header h3 i {
+    color: #3b82f6;
+}
+
+.security-panel-body {
+    padding: 16px;
+}
+
+/* --------------------------------------------------
+   AUDIT LOG LIVE
+   -------------------------------------------------- */
+.audit-log-live {
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+}
+
+.audit-entry {
+    display: flex;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    align-items: flex-start;
+}
+
+.audit-time {
+    color: #64748b;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.audit-icon {
+    flex-shrink: 0;
+    font-size: 10px;
+}
+
+.audit-event {
+    color: #94a3b8;
+    word-break: break-all;
+}
+
+/* --------------------------------------------------
+   QUICK BLOCK FORM
+   -------------------------------------------------- */
+.quick-block-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.security-input {
+    flex: 1;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    color: #e2e8f0;
+    font-size: 12px;
+    font-family: var(--font);
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+.security-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.security-input::placeholder {
+    color: #475569;
+}
+
+/* --------------------------------------------------
+   BLOCKED IP LIST
+   -------------------------------------------------- */
+.blocked-ips-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.blocked-ip-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.1);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+
+.blocked-ip-item span {
+    color: #ef4444;
+    font-family: var(--font-mono);
+}
+
+/* --------------------------------------------------
+   RATE LIMIT STATS
+   -------------------------------------------------- */
+.rate-limit-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.rate-stat {
+    text-align: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+}
+
+.rate-label {
+    display: block;
+    font-size: 10px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.rate-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #e2e8f0;
+    font-family: var(--font-mono);
+}
+
+/* --------------------------------------------------
+   THREAT LIST
+   -------------------------------------------------- */
+.threat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.threat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    transition: var(--transition-fast);
+}
+
+.threat-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.threat-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #e2e8f0;
+}
+
+.threat-count {
+    font-size: 11px;
+    color: #64748b;
+    font-family: var(--font-mono);
+}
+
+/* --------------------------------------------------
+   QUICK ACTIONS GRID
+   -------------------------------------------------- */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.security-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    color: #e2e8f0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: var(--font);
+    text-align: left;
+}
+
+.security-action:hover {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.security-action i {
+    color: #3b82f6;
+}
+
+/* --------------------------------------------------
+   LOG CONTAINER (Admin Panel)
+   -------------------------------------------------- */
+.log-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.log-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    font-size: 12px;
+}
+
+.log-entry span:first-child {
+    color: #94a3b8;
+}
+
+.log-time {
+    color: #64748b;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+/* --------------------------------------------------
+   TOGGLE SWITCH
+   -------------------------------------------------- */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #334155;
+    border-radius: 24px;
+    transition: var(--transition);
+}
+
+.toggle-slider::before {
+    content: "";
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: #3b82f6;
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+}
+
+/* --------------------------------------------------
+   IP LIST (Admin)
+   -------------------------------------------------- */
+.ip-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.ip-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 12px;
+}
+
+.ip-item span {
+    color: #e2e8f0;
+    font-family: var(--font-mono);
+}
+
+/* --------------------------------------------------
+   SYSTEM STATUS LIST
+   -------------------------------------------------- */
+.system-status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-dot.green { background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
+.status-dot.red { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.4); }
+.status-dot.yellow { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
+
+/* --------------------------------------------------
+   TOAST NOTIFICATION
+   -------------------------------------------------- */
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    border-radius: var(--radius);
+    z-index: var(--z-toast);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-xl);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    max-width: 400px;
+}
+
+.toast-notification.show {
+    transform: translateX(0);
+}
+
+.toast-success {
+    background: #065f46;
+    color: #d1fae5;
+    border: 1px solid #10b981;
+}
+
+.toast-error {
+    background: #7f1d1d;
+    color: #fee2e2;
+    border: 1px solid #ef4444;
+}
+
+.toast-info {
+    background: #1e3a5f;
+    color: #dbeafe;
+    border: 1px solid #3b82f6;
+}
+
+/* --------------------------------------------------
+   RESPONSIVE SECURITY
+   -------------------------------------------------- */
+@media (max-width: 992px) {
+    .security-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .security-dashboard-grid .full-width {
+        grid-column: auto;
+    }
+    
+    .rate-limit-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .threat-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .security-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .security-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------------------
+   SCROLLBAR (Dark Theme)
+   -------------------------------------------------- */
+.security-body ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.security-body ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+}
+
+.security-body ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
