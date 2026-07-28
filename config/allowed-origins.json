@@ -1,0 +1,222 @@
+{
+  "version": "2.0.0",
+  "lastUpdated": "2026-01-28",
+  "description": "CORS Allowed Origins & Cross-Origin Configuration",
+  
+  "origins": {
+    "production": [
+      "https://secure-website.vercel.app",
+      "https://www.securesite.com",
+      "https://securesite.com",
+      "https://admin.securesite.com",
+      "https://api.securesite.com",
+      "https://cdn.securesite.com",
+      "https://static.securesite.com"
+    ],
+    "staging": [
+      "https://staging.securesite.com",
+      "https://staging-admin.securesite.com",
+      "https://secure-website-staging.vercel.app",
+      "https://secure-website-git-staging.vercel.app"
+    ],
+    "development": [
+      "http://localhost:3000",
+      "http://localhost:5000",
+      "http://localhost:8000",
+      "http://localhost:8080",
+      "http://127.0.0.1:3000",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:8000",
+      "http://127.0.0.1:8080"
+    ],
+    "preview": [
+      "https://*.vercel.app",
+      "https://*.netlify.app",
+      "https://*.github.io"
+    ]
+  },
+  
+  "methods": {
+    "allowed": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "PATCH",
+      "OPTIONS",
+      "HEAD"
+    ],
+    "publicOnly": [
+      "GET",
+      "OPTIONS",
+      "HEAD"
+    ],
+    "authenticatedOnly": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "PATCH"
+    ]
+  },
+  
+  "headers": {
+    "allowed": [
+      "Content-Type",
+      "Authorization",
+      "X-CSRF-Token",
+      "X-Requested-With",
+      "X-Request-ID",
+      "X-Client-Version",
+      "X-Device-ID",
+      "Accept",
+      "Accept-Language",
+      "Accept-Encoding",
+      "Origin",
+      "Referer",
+      "User-Agent",
+      "Cache-Control",
+      "Pragma",
+      "If-None-Match",
+      "If-Modified-Since"
+    ],
+    "exposed": [
+      "X-Request-ID",
+      "X-Response-Time",
+      "X-RateLimit-Limit",
+      "X-RateLimit-Remaining",
+      "X-RateLimit-Reset",
+      "X-Total-Count",
+      "X-Page-Count",
+      "X-Page-Size",
+      "X-Current-Page",
+      "Content-Length",
+      "Content-Type",
+      "ETag",
+      "Last-Modified"
+    ],
+    "blocked": [
+      "X-Forwarded-For",
+      "X-Real-IP",
+      "X-Client-IP",
+      "X-Http-Method-Override",
+      "X-HTTP-Method-Override",
+      "X-Method-Override"
+    ]
+  },
+  
+  "credentials": {
+    "allowCredentials": true,
+    "requireCredentials": false,
+    "sameSiteCookie": "Strict",
+    "secureCookie": true,
+    "httpOnlyCookie": true
+  },
+  
+  "preflight": {
+    "maxAge": 86400,
+    "cachePreflight": true,
+    "allowPreflight": true,
+    "requirePreflight": true
+  },
+  
+  "security": {
+    "validateOrigin": true,
+    "blockNullOrigin": true,
+    "blockFileOrigin": true,
+    "requireOrigin": false,
+    "reflectOrigin": true,
+    "allowWildcard": false,
+    "logBlockedRequests": true,
+    "logAllowedRequests": false
+  },
+  
+  "routes": {
+    "public": {
+      "paths": [
+        "/",
+        "/index.html",
+        "/login",
+        "/login.html",
+        "/404.html",
+        "/500.html"
+      ],
+      "cors": "public"
+    },
+    "authenticated": {
+      "paths": [
+        "/dashboard",
+        "/dashboard.html",
+        "/api/user/*",
+        "/api/profile/*"
+      ],
+      "cors": "authenticated",
+      "requireAuth": true
+    },
+    "admin": {
+      "paths": [
+        "/admin",
+        "/admin.html",
+        "/api/admin/*",
+        "/api/security/*"
+      ],
+      "cors": "admin",
+      "requireAuth": true,
+      "requireRole": "admin"
+    },
+    "api": {
+      "paths": [
+        "/api/*"
+      ],
+      "cors": "api"
+    },
+    "assets": {
+      "paths": [
+        "/assets/*",
+        "/css/*",
+        "/js/*",
+        "/images/*"
+      ],
+      "cors": "public",
+      "maxAge": 2592000
+    }
+  },
+  
+  "exceptions": {
+    "allowedPatterns": [
+      "https://*.securesite.com",
+      "https://*.vercel.app",
+      "https://*.netlify.app"
+    ],
+    "blockedPatterns": [
+      "https://*.scraper.com",
+      "https://*.spam.net"
+    ],
+    "allowedSchemes": [
+      "https",
+      "http"
+    ],
+    "blockedSchemes": [
+      "file",
+      "data",
+      "javascript",
+      "vbscript"
+    ]
+  },
+  
+  "rateLimiting": {
+    "enabled": true,
+    "preflightLimit": 50,
+    "preflightWindow": 3600,
+    "perOriginLimit": 1000,
+    "perOriginWindow": 3600
+  },
+  
+  "monitoring": {
+    "enabled": true,
+    "logLevel": "warn",
+    "metricsCollection": false,
+    "alertOnBlocked": true,
+    "alertThreshold": 10
+  }
+}
